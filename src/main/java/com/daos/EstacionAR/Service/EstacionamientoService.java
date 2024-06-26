@@ -88,7 +88,7 @@ public class EstacionamientoService {
 
     // Cnsultar un registro de estacionamiento por patente
     public Optional<Estacionamiento> consultarEstacionamiento(String patente) {
-        // lógica
-        return Optional.empty();
+        // Buscar el estacionamiento por la patente en el repository
+        return estacionamientoRepository.findByPatente(patente);
     }
 }
