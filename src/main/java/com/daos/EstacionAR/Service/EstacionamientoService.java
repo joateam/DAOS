@@ -22,11 +22,16 @@ public class EstacionamientoService {
 
     // Inicia un nuevo registro de estacionamiento
     public Estacionamiento crearEstacionamiento(EstacionamientoForm estacionamientoForm) {
+
+        // Instancia
         Estacionamiento nuevoEstacionamiento = new Estacionamiento();
+
+        // Asignando valores del formulario a la entidad 
         nuevoEstacionamiento.setPatente(estacionamientoForm.getPatente());
         nuevoEstacionamiento.setPasswordUser(estacionamientoForm.getPasswordUser());
         nuevoEstacionamiento.setEstado(estacionamientoForm.getEstado() == EstacionamientoForm.EstadoEstacionamiento.ESTACIONADO);
 
+        // guardando en la base de datos mediante el Repository
         return estacionamientoRepository.save(nuevoEstacionamiento);
     }
 
