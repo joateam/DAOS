@@ -16,15 +16,15 @@ public class EstacionamientoController {
     @Autowired
     private EstacionamientoService estacionamientoService;
 
-    //INICIAR ESTACIONAMIENTO
+    //CREAR ESTACIONAMIENTO, nuevo registro utilizando el form
     @PostMapping
     public ResponseEntity<?> crearEstacionamiento(@Validated @RequestBody EstacionamientoForm estacionamientoForm) {
         try {
             estacionamientoService.validarEstacionamiento(estacionamientoForm);
             Estacionamiento nuevoEstacionamiento = estacionamientoService.crearEstacionamiento(estacionamientoForm);
-            return ResponseEntity.ok(nuevoEstacionamiento);
+            return ResponseEntity.ok(nuevoEstacionamiento); //exitoso
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage()); //msj de error
         }
     }
 
@@ -37,21 +37,21 @@ public class EstacionamientoController {
             if (estacionamientoActual.isPresent()) {
                 return ResponseEntity.ok(estacionamientoActual.get());
             } else {
-                return ResponseEntity.notFound().build();
+                return ResponseEntity.notFound().build(); //no encuentro el estacionamiento
             }
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    //CONSULTAR ESTADO DEL ESTACIONAMIENTO
+    //CONSULTAR ESTADO DEL ESTACIONAMIENTO, por patente
     @GetMapping("/{patente}")
     public ResponseEntity<?> consultarEstacionamiento(@PathVariable String patente) {
         Optional<Estacionamiento> estacionamiento = estacionamientoService.consultarEstacionamiento(patente);
         if (estacionamiento.isPresent()) {
-            return ResponseEntity.ok(estacionamiento.get());
+            return ResponseEntity.ok(estacionamiento.get()); //devuelvo detalles
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().build(); //no ahy estacionamiento
         }
     }
 }
