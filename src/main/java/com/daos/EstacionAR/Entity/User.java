@@ -1,5 +1,6 @@
 package com.daos.EstacionAR.Entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
@@ -25,6 +26,6 @@ public class User {
     private String domicilio;
     private String correo;
     private LocalDate nacimiento;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Vehiculo vehiculo;
 }

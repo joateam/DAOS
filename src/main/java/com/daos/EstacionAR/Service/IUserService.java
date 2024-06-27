@@ -8,11 +8,10 @@ import java.util.List;
 public interface IUserService {
 
     public List<User> getUsers();
-    public void saveUser(User usuario, Vehiculo coche);
+    public void saveUser(User usuario);
     public void deleteUser(Integer dni);
 
     public void editUser(Integer dni, User newUserData);
-
 
     public User findUser(Integer dni);
 }

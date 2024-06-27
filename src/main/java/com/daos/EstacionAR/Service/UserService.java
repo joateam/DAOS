@@ -21,7 +21,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void saveUser(User usuario, Vehiculo coche) {
+    public void saveUser(User usuario) {
+        userRepo.save(usuario);
 
     }
 
@@ -33,7 +34,17 @@ public class UserService implements IUserService {
     @Override
     public void editUser(Integer dni, User newUserData) {
         User usuarioEncontrado = this.findUser(dni);
+        if(usuarioEncontrado != null){
+            usuarioEncontrado.setApellido(newUserData.getApellido());
+            usuarioEncontrado.setContraseña(newUserData.getContraseña());
+            usuarioEncontrado.setCorreo(newUserData.getCorreo());
+            usuarioEncontrado.setDomicilio(newUserData.getDomicilio());
+            usuarioEncontrado.setVehiculo(newUserData.getVehiculo());
+            usuarioEncontrado.setNacimiento(newUserData.getNacimiento());
+            usuarioEncontrado.setNombre(newUserData.getNombre());
 
+            this.saveUser(usuarioEncontrado);
+        }
     }
 
     @Override
