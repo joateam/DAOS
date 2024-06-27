@@ -1,5 +1,12 @@
 package com.daos.EstacionAR.Service;
 
-public interface IRecargaService {
+import java.util.List;
 
+import com.daos.EstacionAR.Entity.Recarga;
+
+public interface IRecargaService {
+	
+	public List<Recarga> getByDni(Long dni);
+	public List<Recarga> getByPatente(String patente);
+	public List<Recarga> getByNroComercio(Long nroComercio);
 }
