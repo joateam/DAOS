@@ -1,5 +1,10 @@
 package com.daos.EstacionAR.Service;
 
-public class RecargaService {
+import org.springframework.stereotype.Service;
 
+@Service
+public class RecargaService {
+	
+	
+	
 }
