@@ -1,71 +1,119 @@
 package com.daos.EstacionAR.Entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+
+import java.time.LocalDateTime;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.GeneratedValue;
 
 @Entity
 public class Estacionamiento {
 
-    private String Patente;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private User passwordUser;
+    private String patente;
 
-    public Boolean Estado;
+    private String contraseña;
 
-    public User dniUser;
+    // DEFINE LOS POSIBLES ESTADOS
+    @Enumerated(EnumType.STRING)
+    private Estado estado; 
 
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    // Costructor sin parámetros
+    private LocalDateTime horaInicio;
+
+    private LocalDateTime horaFin;
+//-------------------------------------------------------------------------
+
+    public enum Estado {
+        LIBRE,
+        ESTACIONADO
+    }
+
+    // CONSTRCUTOR SIN PARAMETROS
     public Estacionamiento() {
-
+       
     }
 
-    // Constructor con parámetros
-    public Estacionamiento(String Patente, User passwordUser,Boolean Estado) {
-        this.Patente = Patente;
-        this.passwordUser= passwordUser;
-        this.Estado = Estado;
+    // Getters y setters
+
+    public Long getId() {
+        return id;
     }
 
-    // Getters and Setters
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getPatente() {
-        return Patente;
+        return patente;
     }
 
     public void setPatente(String patente) {
-        Patente = patente;
+        this.patente = patente;
     }
 
-    public User getPasswordUser() {
-        return passwordUser;
+    public String getContraseña() {
+        return contraseña;
     }
 
-    public void setPasswordUser(User passwordUser) {
-        this.passwordUser = passwordUser;
+    public void setContraseña(String contraseña) {
+        this.contraseña = contraseña;
     }
 
-    public Boolean getEstado() {
-        return Estado;
+    public Estado getEstado() {
+        return estado;
     }
 
-    public void setEstado(Boolean estado) {
-        Estado = estado;
+    public void setEstado(Estado estado) {
+        this.estado = estado;
     }
 
-    public User getDniUser() {
-        return dniUser;
+    public User getUser() {
+        return user;
     }
 
-    public void setDniUser(User dniUser) {
-        this.dniUser = dniUser;
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public LocalDateTime getHoraInicio() {
+        return horaInicio;
+    }
+
+    public void setHoraInicio(LocalDateTime horaInicio) {
+        this.horaInicio = horaInicio;
+    }
+
+    public LocalDateTime getHoraFin() {
+        return horaFin;
+    }
+
+    public void setHoraFin(LocalDateTime horaFin) {
+        this.horaFin = horaFin;
+    }
+
+    public Integer getDniUser() {
+        return user != null ? user.getDni() : null;
     }
 
     @Override
     public String toString() {
         return "Estacionamiento{" +
-                "Patente='" + Patente + '\'' +
-                ", Estado=" + Estado +
-                ", dniUser=" + dniUser +
+                "id=" + id +
+                ", patente='" + patente + '\'' +
+                ", estado=" + estado +
+                ", dni user=" + (user != null ? user.getDni() : "null") +
                 '}';
-    }    
-
+    }
 }
