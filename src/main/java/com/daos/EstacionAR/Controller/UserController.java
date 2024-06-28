@@ -23,4 +23,14 @@ public class UserController {
     public void crearUsuario(@RequestBody User usuario){
         userServ.saveUser(usuario);
     }
+
+    @DeleteMapping("/{dni}")
+    public void bajaUsuario(@PathVariable Integer dni){
+        userServ.deleteUser(dni);
+    }
+
+    @PutMapping("/{dni}")
+    public void editUsuario(@PathVariable Integer dni, @RequestBody User usuarioNewData){
+        userServ.editUser(dni,usuarioNewData);
+    }
 }
