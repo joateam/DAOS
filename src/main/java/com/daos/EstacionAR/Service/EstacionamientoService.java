@@ -27,34 +27,38 @@ public class EstacionamientoService {
                 .orElseThrow(() -> new Exception("El usuario no existe."));
 
         // Validar la contraseña proporcionada con la almacenada
-        if (!esPasswordValido(estacionamientoForm.getPasswordUser(), user.getPassword())) {
+        if (!esPasswordValido(estacionamientoForm.getPasswordUser(), user.getContraseña())) {
             throw new Exception("La contraseña del usuario no es válida.");
         }
     }
 
-    // Método de ejemplo para validar la contraseña (simple comparación de texto)
+    // Ejemplo para validar la contraseña (comparación de texto)
     private boolean esPasswordValido(String providedPassword, String storedPassword) {
-        // Comparar la contraseña proporcionada con la almacenada
         return providedPassword.equals(storedPassword);
+    }
+
+    // Valida y crea un nuevo registro de estacionamiento
+    public Estacionamiento validarYCrearEstacionamiento(EstacionamientoForm estacionamientoForm) throws Exception {
+        validarEstacionamiento(estacionamientoForm);
+        return crearEstacionamiento(estacionamientoForm);
     }
 
     // Inicia un nuevo registro de estacionamiento
     public Estacionamiento crearEstacionamiento(EstacionamientoForm estacionamientoForm) {
-
         // Instancia
         Estacionamiento nuevoEstacionamiento = new Estacionamiento();
 
         // Asignando valores del formulario a la entidad
         nuevoEstacionamiento.setPatente(estacionamientoForm.getPatente());
-        nuevoEstacionamiento.setPasswordUser(estacionamientoForm.getPasswordUser());
-        nuevoEstacionamiento
-                .setEstado(estacionamientoForm.getEstado() == EstacionamientoForm.EstadoEstacionamiento.ESTACIONADO);
+        nuevoEstacionamiento.setContraseña(estacionamientoForm.getPasswordUser());
+        nuevoEstacionamiento.setEstado(
+                Estacionamiento.Estado.valueOf(estacionamientoForm.getEstado().name()));
 
         // guardando en la base de datos mediante el Repository
         return estacionamientoRepository.save(nuevoEstacionamiento);
     }
 
-    // Interactura con el repositorio para actualizar un registro de estacionamiento
+    // Interactua con el repositorio para actualizar un registro de estacionamiento
     // existente
     public Optional<Estacionamiento> actualizarEstacionamiento(String patente,
             EstacionamientoForm estacionamientoForm) {
@@ -74,8 +78,7 @@ public class EstacionamientoService {
             Estacionamiento estacionamiento = estacionamientoOptional.get();
 
             // Actualizar el estado del estacionamiento según el formulario
-            estacionamiento.setEstado(
-                    estacionamientoForm.getEstado() == EstacionamientoForm.EstadoEstacionamiento.ESTACIONADO);
+            estacionamiento.setEstado(Estacionamiento.Estado.valueOf(estacionamientoForm.getEstado().name()));
 
             // Guardar el estacionamiento actualizado en la base de datos y devolver la
             // entidad actualizada
@@ -86,7 +89,7 @@ public class EstacionamientoService {
         }
     }
 
-    // Cnsultar un registro de estacionamiento por patente
+    // Consulta un registro de estacionamiento por patente
     public Optional<Estacionamiento> consultarEstacionamiento(String patente) {
         // Buscar el estacionamiento por la patente en el repository
         return estacionamientoRepository.findByPatente(patente);
