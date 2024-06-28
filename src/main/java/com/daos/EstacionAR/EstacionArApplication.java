@@ -8,6 +8,10 @@ public class EstacionArApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(EstacionArApplication.class, args);
+		
+	}
+	
+	private static void insertTestData() {
 	}
 
 }
