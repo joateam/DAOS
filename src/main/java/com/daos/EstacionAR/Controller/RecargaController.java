@@ -1,8 +1,8 @@
 package com.daos.EstacionAR.Controller;
 
-import java.util.ArrayList;
+
 import java.util.List;
-import java.util.Optional;
+
 
 //import org.hibernate.mapping.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -25,13 +25,13 @@ public class RecargaController {
 	
 	@Autowired
 	private RecargaService recargaService;
-	
+	/**
 	@Autowired
 	private UserService userService;
 	
-	//@Autowired
-	//private ComercioService comercioService;
-	
+	@Autowired
+	private ComercioService comercioService;
+	*/
 	@GetMapping(value ="/filtrar_recargas",produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<List<Recarga>> getAll(
 			@RequestParam Long dni,
@@ -81,8 +81,12 @@ public class RecargaController {
 		return ResponseEntity.ok(recargas);
 	}
 	
-	
+	/**
 	@PostMapping(value="/recargar")
+	public void recargar() {
+		
+	}
+	*/
 	
 
 }
