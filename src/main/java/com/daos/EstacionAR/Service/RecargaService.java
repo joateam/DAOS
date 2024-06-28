@@ -1,6 +1,8 @@
 package com.daos.EstacionAR.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,19 +19,22 @@ public class RecargaService implements IRecargaService {
 	@Override
 	public List<Recarga> getByDni(Long dni) {
 		// TODO Auto-generated method stub
-		return null;
+		
+		return repo.findByDni(dni);
 	}
 
 	@Override
 	public List<Recarga> getByPatente(String patente) {
 		// TODO Auto-generated method stub
-		return null;
+		List<Recarga> recargas = new ArrayList<Recarga>();
+		return recargas;
 	}
 
 	@Override
 	public List<Recarga> getByNroComercio(Long nroComercio) {
 		// TODO Auto-generated method stub
-		return null;
+		List<Recarga> recargas = new ArrayList<Recarga>();
+		return recargas;
 	}
 	
 	

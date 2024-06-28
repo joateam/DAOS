@@ -27,8 +27,16 @@ public class Recarga {
 	private double importe;
 
 	
+	public Recarga(){}
 	
-	
+	public Recarga(Long nroComercio, Long dni, String patente, double importe) {
+		super();
+		this.nroComercio = nroComercio;
+		this.dni = dni;
+		this.patente = patente;
+		this.importe = importe;
+	}
+
 	public Long getId() {
 		return id;
 	}
