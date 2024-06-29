@@ -7,7 +7,7 @@ import jakarta.persistence.Enumerated;
 import java.time.LocalDateTime;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.GeneratedValue;
 
@@ -26,7 +26,7 @@ public class Estacionamiento {
     @Enumerated(EnumType.STRING)
     private Estado estado; 
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
