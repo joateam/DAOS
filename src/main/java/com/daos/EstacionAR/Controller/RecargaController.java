@@ -12,31 +12,40 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.daos.EstacionAR.Entity.Recarga;
 import com.daos.EstacionAR.Service.RecargaService;
 import com.daos.EstacionAR.Service.UserService;
 
-@Controller
+@RestController
 @RequestMapping("/recarga")
 public class RecargaController {
 	
 	@Autowired
 	private RecargaService recargaService;
-	/**
+	
 	@Autowired
 	private UserService userService;
 	
-	@Autowired
-	private ComercioService comercioService;
-	*/
+	//@Autowired
+	//private ComercioService comercioService;
+	
+	@GetMapping(value="/todas", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public List<Recarga> obtenerTodas(){
+		List<Recarga> recargas = recargaService.getALL();
+		return recargas;
+	}
+	
+	
 	@GetMapping(value ="/filtrar_recargas",produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<List<Recarga>> getAll(
-			@RequestParam Long dni,
-			@RequestParam String patente,
-			@RequestParam Long nroComercio){
+			@RequestParam (required=false) Long dni,
+			@RequestParam (required=false) String patente,
+			@RequestParam (required=false) Long nroComercio){
 		
 		List<Recarga> recargas = null;
 		
@@ -81,12 +90,12 @@ public class RecargaController {
 		return ResponseEntity.ok(recargas);
 	}
 	
-	/**
-	@PostMapping(value="/recargar")
-	public void recargar() {
-		
+	
+	@PostMapping(value="/cargar-saldo",consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public  void recargar(@RequestBody  Recarga recarga) {
+		recargaService.Recargar(recarga);
 	}
-	*/
+	
 	
 
 }
