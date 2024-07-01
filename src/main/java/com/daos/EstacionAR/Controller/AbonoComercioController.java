@@ -41,6 +41,7 @@ public class AbonoComercioController {
         respuesta.add(linkTo(methodOn(AbonoComercioController.class).show(id, fechaDesde, fechaHasta)).withSelfRel());
 
         return ResponseEntity.ok(respuesta);
+        
     }
     
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
