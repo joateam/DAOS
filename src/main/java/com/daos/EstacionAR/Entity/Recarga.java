@@ -1,5 +1,7 @@
 package com.daos.EstacionAR.Entity;
 
+import java.time.LocalDate;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
@@ -26,8 +28,10 @@ public class Recarga {
 	@Column(nullable=false,scale=2)
 	private double importe;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate fecha;
 	
-	
+	private Integer abonado;
 	
 	public Long getId() {
 		return id;
@@ -68,7 +72,18 @@ public class Recarga {
 	public void setImporte(double importe) {
 		this.importe = importe;
 	}
+	public LocalDate getFecha() {
+		return fecha;
+	}
+	public void setFecha(LocalDate fecha) {
+		this.fecha = fecha;
+	}
 	
+	public Integer getAbonado() {
+		return abonado;
+	}
 	
-	
+	public void setAbonado(Integer abonado) {
+		this.abonado = abonado;
+	}
 }

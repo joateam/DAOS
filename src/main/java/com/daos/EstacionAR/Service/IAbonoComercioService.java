@@ -2,17 +2,15 @@ package com.daos.EstacionAR.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
-
-import com.daos.EstacionAR.Entity.AbonoComercio;
 
 public interface IAbonoComercioService {
 
-	public List<AbonoComercio> getAll();
+	 Long obtenerCantidadRecargasPagas(Long comercioId, LocalDate fechaDesde, LocalDate fechaHasta);
 
-	public Optional<AbonoComercio> getById(Long id);
+	 Long obtenerCantidadRecargasImpagas(Long comercioId, LocalDate fechaDesde, LocalDate fechaHasta);
+
+	 Double obtenerSaldoRecargasImpagas(Long comercioId, LocalDate fechaDesde, LocalDate fechaHasta);
+	 
+	 List<Long> obtenerTodosLosIdsDeComercio();
 	
-	public void insert(AbonoComercio ac) throws Exception;
-	
-	public List<AbonoComercio> findByFechaBetween(LocalDate fechaDesde, LocalDate fechaHasta);
 }
