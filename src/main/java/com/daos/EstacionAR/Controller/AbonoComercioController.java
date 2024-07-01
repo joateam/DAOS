@@ -3,14 +3,16 @@ package com.daos.EstacionAR.Controller;
 
 import com.daos.EstacionAR.Response.AbonoComercioResponseDTO;
 import com.daos.EstacionAR.Service.AbonoComercioServiceImpl;
-import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/abonocomercios")
+@Validated
 public class AbonoComercioController {
 
     @Autowired
@@ -42,14 +45,14 @@ public class AbonoComercioController {
     
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<List<AbonoComercioResponseDTO>> index(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) {
+    		@RequestParam @NotNull(message = "La fecha de inicio no puede ser nula") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
+            @RequestParam @NotNull(message = "La fecha de fin no puede ser nula") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta)  throws Exception  {
 
         List<Long> comercioIds = abonoComercioService.obtenerTodosLosIdsDeComercio();
         List<AbonoComercioResponseDTO> responseList = new ArrayList();
 
         for (Long comercioId : comercioIds) {
-            Long recargasPagas = abonoComercioService.obtenerCantidadRecargasPagas(comercioId, fechaDesde, fechaHasta);
+        	Long recargasPagas = abonoComercioService.obtenerCantidadRecargasPagas(comercioId, fechaDesde, fechaHasta);
             Long recargasImpagas = abonoComercioService.obtenerCantidadRecargasImpagas(comercioId, fechaDesde, fechaHasta);
             Double saldoImpagas = abonoComercioService.obtenerSaldoRecargasImpagas(comercioId, fechaDesde, fechaHasta);
 
