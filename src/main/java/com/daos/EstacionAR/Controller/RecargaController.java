@@ -1,11 +1,14 @@
 package com.daos.EstacionAR.Controller;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 //import org.hibernate.mapping.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.daos.EstacionAR.Entity.Recarga;
+import com.daos.EstacionAR.Response.RecargaResponseDTO;
 import com.daos.EstacionAR.Service.RecargaService;
 import com.daos.EstacionAR.Service.UserService;
 
@@ -42,7 +46,7 @@ public class RecargaController {
 	
 	
 	@GetMapping(value ="/filtrar_recargas",produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<List<Recarga>> getAll(
+	public ResponseEntity<List<RecargaResponseDTO>> filtrarTodo(
 			@RequestParam (required=false) Long dni,
 			@RequestParam (required=false) String patente,
 			@RequestParam (required=false) Long nroComercio){
@@ -85,9 +89,16 @@ public class RecargaController {
 		
 		if (recargas.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		}else {
+			
+			List<RecargaResponseDTO> dtos = new ArrayList<RecargaResponseDTO>();
+			for (Recarga pojo : recargas) {
+				dtos.add(construirRespuesta(pojo));
+			}
+			return ResponseEntity.ok(dtos);
 		}
 		
-		return ResponseEntity.ok(recargas);
+		
 	}
 	
 	
@@ -97,5 +108,39 @@ public class RecargaController {
 	}
 	
 	
+	
+	/**
+	 * Métdo auxiliar que toma los datos del pojo y construye el objeto a devolver en la response, con su hipervinculos
+	 * @param pojo
+	 * @return
+	 * @throws Excepcion 
+	 */
+	private RecargaResponseDTO construirRespuesta(Recarga pojo) /**throws Excepcion*/ {
+		try {
+			RecargaResponseDTO dto = new RecargaResponseDTO(pojo);
+			 //Self link
+			Link selfLink = WebMvcLinkBuilder.linkTo(RecargaController.class)
+										.slash(pojo.getId())                
+										.withSelfRel();
+			
+			
+//			Method link: Link al servicio que permitirá navegar hacia el usuario relacionado a la recarga
+//			Link userLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class)
+//			       													.getByDni(pojo.getDni()))
+//			       													.withRel("usuario");
+//			Method link: Link al servicio que permitirá navegar hacia el comercio relacionado a la recarga
+//			Link comercioLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ComercioController.class)
+//			       													.getByNro(pojo.getNroComercio()))
+//			       													.withRel("comercio");
+		
+			dto.add(selfLink);
+//			dto.add(userLink);
+//			dto.add(comercioLink);
+			return dto;
+		
+		} catch (Exception e) {
+			return null;//throw new Excepcion(e.getMessage(), 500);
+		}
+	}
 
 }
