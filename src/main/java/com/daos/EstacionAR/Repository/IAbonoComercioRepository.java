@@ -20,6 +20,6 @@ public interface IAbonoComercioRepository extends JpaRepository<Recarga, Long> {
 	    @Query("SELECT SUM(r.importe) FROM Recarga r WHERE r.nroComercio = :comercioId AND r.fecha BETWEEN :fechaDesde AND :fechaHasta AND r.abonado = 0")
 	    Double sumSaldoRecargasImpagas(@Param("comercioId") Long comercioId, @Param("fechaDesde") LocalDate fechaDesde, @Param("fechaHasta") LocalDate fechaHasta);
 	    
-	    @Query("SELECT DISTINCT r.nroComercio FROM Recarga r")
+	    @Query("SELECT DISTINCT r.nroComercio FROM Recarga r ORDER BY r.nroComercio")
 	    List<Long> findAllComercioIds();
 }
