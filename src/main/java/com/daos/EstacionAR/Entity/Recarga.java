@@ -38,7 +38,7 @@ public class Recarga {
 	
 	public Recarga(Long nroComercio, Long dni, String patente, double importe , LocalDateTime fecha) {
 		super();
-		this.nroComercio = nroComercio;
+		this.nroComercio = nroComercio; 
 		this.dni = dni;
 		this.patente = patente;
 		this.importe = importe;
