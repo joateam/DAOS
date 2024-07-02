@@ -95,6 +95,11 @@ public class Recarga {
 
 	
 	
+	public Integer getAbonado() {
+		return abonado;
+	}
 	
-	
+	public void setAbonado(Integer abonado) {
+		this.abonado = abonado;
+	}
 }

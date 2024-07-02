@@ -1,23 +1,49 @@
 package com.daos.EstacionAR;
 
-import java.time.LocalDate;
-import java.util.Arrays;
-
+import com.daos.EstacionAR.Entity.Recarga;
+import com.daos.EstacionAR.Repository.IRecargaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 
-import com.daos.EstacionAR.Entity.AbonoComercio;
-import com.daos.EstacionAR.Repository.IAbonoComercioRepository;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Random;
+import java.util.stream.IntStream;
 
-public class DataTest {
+@Component
+public class DataTest implements CommandLineRunner {
 
-	@Autowired
-    private IAbonoComercioRepository abonoComercioRepository;
+    @Autowired
+    private IRecargaRepository recargaRepository;
 
-    public void init() {
-        AbonoComercio abono1 = new AbonoComercio(1L, LocalDate.of(2024, 6, 1), LocalDate.of(2024, 6, 30), 950.00f);
-        AbonoComercio abono2 = new AbonoComercio(2L, LocalDate.of(2024, 6, 1), LocalDate.of(2024, 6, 30), 850.00f);
-        AbonoComercio abono3 = new AbonoComercio(1L, LocalDate.of(2024, 5, 1), LocalDate.of(2024, 5, 31), 1000.00f);
+    @Override
+    public void run(String... args) throws Exception {
+        Random random = new Random();
 
-        abonoComercioRepository.saveAll(Arrays.asList(abono1, abono2, abono3));
+        IntStream.range(0, 10).forEach(i -> {
+        	 Recarga recarga = new Recarga();
+             recarga.setNroComercio((long) (random.nextInt(10) + 1));
+             recarga.setDni(10000000L + random.nextInt(90000000));
+             recarga.setPatente(generateRandomPatente(random));
+             recarga.setImporte(random.nextInt(901) + 100);
+             recarga.setFecha(generateRandomDate(random));
+             recarga.setAbonado(random.nextInt(2));
+
+             recargaRepository.save(recarga);
+        });
+    }
+
+    private String generateRandomPatente(Random random) {
+        char[] letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+        char[] numbers = "0123456789".toCharArray();
+        return "" + letters[random.nextInt(letters.length)] + letters[random.nextInt(letters.length)] + letters[random.nextInt(letters.length)]
+                + numbers[random.nextInt(numbers.length)] + numbers[random.nextInt(numbers.length)] + numbers[random.nextInt(numbers.length)];
+    }
+
+    private LocalDate generateRandomDate(Random random) {
+        LocalDate startDate = LocalDate.of(2024, 6, 1);
+        long days = ChronoUnit.DAYS.between(startDate, LocalDate.now());
+        return startDate.plusDays(random.nextInt((int) days + 1));
     }
 }

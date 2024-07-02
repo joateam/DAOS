@@ -4,6 +4,8 @@ o Fecha Desde
 o Fecha Hasta
 o Importe (numero con dos decimales)
 En caso del POST, todos los datos son requeridos y se insertará un registro con el importe abonado. Tenga en cuenta verificar que se está pagando el monto correcto, caso contrario deberá informar el error.
+
 En el GET solo serán requeridas las fechas, dejando como opcional el nro de comercio. El importe nunca será enviado en la request para el caso del GET, siendo éste un dato devuelto por el servicio. Si el usuario opta por no indicar el nro de comercio, la consulta devolverá el saldo a abonar de cada comercio registrado.
+
 La consulta devolverá un link (HATEOAS) link al servicio S03 para consultar los datos del comercio POST / GET
 (Servicio Tarea)

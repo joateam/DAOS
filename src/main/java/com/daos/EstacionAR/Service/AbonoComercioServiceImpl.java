@@ -8,32 +8,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.daos.EstacionAR.Entity.AbonoComercio;
+import com.daos.EstacionAR.Entity.Recarga;
 import com.daos.EstacionAR.Repository.IAbonoComercioRepository;
 
 @Service
 public class AbonoComercioServiceImpl implements IAbonoComercioService {
 
+	 @Autowired
+	    private IAbonoComercioRepository abonoComercioRepository;
 
-	@Autowired
-	private IAbonoComercioRepository repo;
-	
-	@Override
-	public List<AbonoComercio> getAll() {
-		return repo.findAll();
-	}
-
-	@Override
-	public Optional<AbonoComercio> getById(Long id) {
-		return repo.findById(id);
-	}
-
-	 @Override
-	    public List<AbonoComercio> findByFechaBetween(LocalDate fechaDesde, LocalDate fechaHasta) {
-	        return repo.findByFechaBetween(fechaDesde, fechaHasta);
+	    @Override
+	    public Long obtenerCantidadRecargasPagas(Long comercioId, LocalDate fechaDesde, LocalDate fechaHasta) {
+	        return abonoComercioRepository.countRecargasPagas(comercioId, fechaDesde, fechaHasta);
 	    }
-	 
-	 @Override
-	 public void insert(AbonoComercio abonoComercio) {
-	        repo.save(abonoComercio);
+
+	    @Override
+	    public Long obtenerCantidadRecargasImpagas(Long comercioId, LocalDate fechaDesde, LocalDate fechaHasta) {
+	        return abonoComercioRepository.countRecargasImpagas(comercioId, fechaDesde, fechaHasta);
+	    }
+
+	    @Override
+	    public Double obtenerSaldoRecargasImpagas(Long comercioId, LocalDate fechaDesde, LocalDate fechaHasta) {
+	        return abonoComercioRepository.sumSaldoRecargasImpagas(comercioId, fechaDesde, fechaHasta);
+	    }
+
+	    @Override
+	    public List<Long> obtenerTodosLosIdsDeComercio() {
+	        return abonoComercioRepository.findAllComercioIds();
 	    }
 }

@@ -1,73 +1,61 @@
 package com.daos.EstacionAR.Response;
 
 import org.springframework.hateoas.RepresentationModel;
-import com.daos.EstacionAR.Entity.AbonoComercio;
 
 public class AbonoComercioResponseDTO extends RepresentationModel<AbonoComercioResponseDTO> {
 
-    private Long id;
-    private Long nroComercio;
-    private String fechaDesde;
-    private String fechaHasta;
-    private Float importe;
+    private Long idComercio;
+    private Long cantRecargasPagas;
+    private Long cantRecargasImpagas;
+    private Double saldoImpagas;
 
-    public AbonoComercioResponseDTO(AbonoComercio abonoComercio) {
-        this.id = abonoComercio.getId();
-        this.nroComercio = abonoComercio.getNroComercio();
-        this.fechaDesde = abonoComercio.getFechaDesde().toString();
-        this.fechaHasta = abonoComercio.getFechaHasta().toString();
-        this.importe = abonoComercio.getImporte();
+    public AbonoComercioResponseDTO(Long idComercio, Long cantRecargasPagas, Long cantRecargasImpagas, Double saldoImpagas) {
+        this.idComercio = idComercio;
+        this.cantRecargasPagas = cantRecargasPagas;
+        this.cantRecargasImpagas = cantRecargasImpagas;
+        this.saldoImpagas = saldoImpagas;
     }
 
-    public Long getId() {
-        return id;
+    // Getters y setters
+    public Long getIdComercio() {
+        return idComercio;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdComercio(Long idComercio) {
+        this.idComercio = idComercio;
     }
 
-    public Long getNroComercio() {
-        return nroComercio;
+    public Long getCantRecargasPagas() {
+        return cantRecargasPagas;
     }
 
-    public void setNroComercio(Long nroComercio) {
-        this.nroComercio = nroComercio;
+    public void setCantRecargasPagas(Long cantRecargasPagas) {
+        this.cantRecargasPagas = cantRecargasPagas;
     }
 
-    public String getFechaDesde() {
-        return fechaDesde;
+    public Long getCantRecargasImpagas() {
+        return cantRecargasImpagas;
     }
 
-    public void setFechaDesde(String fechaDesde) {
-        this.fechaDesde = fechaDesde;
+    public void setCantRecargasImpagas(Long cantRecargasImpagas) {
+        this.cantRecargasImpagas = cantRecargasImpagas;
     }
 
-    public String getFechaHasta() {
-        return fechaHasta;
+    public Double getSaldoImpagas() {
+        return saldoImpagas;
     }
 
-    public void setFechaHasta(String fechaHasta) {
-        this.fechaHasta = fechaHasta;
-    }
-
-    public Float getImporte() {
-        return importe;
-    }
-
-    public void setImporte(Float importe) {
-        this.importe = importe;
+    public void setSaldoImpagas(Double saldoImpagas) {
+        this.saldoImpagas = saldoImpagas;
     }
 
     @Override
     public String toString() {
         return "AbonoComercioResponseDTO{" +
-                "id=" + id +
-                ", nroComercio=" + nroComercio +
-                ", fechaDesde='" + fechaDesde + '\'' +
-                ", fechaHasta='" + fechaHasta + '\'' +
-                ", importe=" + importe +
+                "idComercio=" + idComercio +
+                ", cantRecargasPagas=" + cantRecargasPagas +
+                ", cantRecargasImpagas=" + cantRecargasImpagas +
+                ", saldoImpagas=" + saldoImpagas +
                 '}';
     }
 }
-
