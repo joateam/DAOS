@@ -6,8 +6,6 @@ import jakarta.persistence.Enumerated;
 
 import java.time.LocalDateTime;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.GeneratedValue;
 
@@ -20,15 +18,9 @@ public class Estacionamiento {
 
     private String patente;
 
-    private String contraseña;
-
     // DEFINE LOS POSIBLES ESTADOS
     @Enumerated(EnumType.STRING)
     private Estado estado; 
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
 
     private LocalDateTime horaInicio;
 
@@ -40,12 +32,9 @@ public class Estacionamiento {
         ESTACIONADO
     }
 
-    // CONSTRCUTOR SIN PARAMETROS
     public Estacionamiento() {
        
     }
-
-    // Getters y setters
 
     public Long getId() {
         return id;
@@ -63,28 +52,12 @@ public class Estacionamiento {
         this.patente = patente;
     }
 
-    public String getContraseña() {
-        return contraseña;
-    }
-
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
-    }
-
     public Estado getEstado() {
         return estado;
     }
 
     public void setEstado(Estado estado) {
         this.estado = estado;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public LocalDateTime getHoraInicio() {
@@ -103,17 +76,14 @@ public class Estacionamiento {
         this.horaFin = horaFin;
     }
 
-    public Integer getDniUser() {
-        return user != null ? user.getDni() : null;
-    }
-
     @Override
     public String toString() {
         return "Estacionamiento{" +
                 "id=" + id +
                 ", patente='" + patente + '\'' +
-                ", estado=" + estado +
-                ", dni user=" + (user != null ? user.getDni() : "null") +
+                ", estado='" + estado + '\'' +
+                ", horaInicio=" + horaInicio +
+                ", horaFin=" + horaFin +
                 '}';
     }
 }
