@@ -1,5 +1,6 @@
 package com.daos.EstacionAR.Response;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.hateoas.RepresentationModel;
@@ -23,7 +24,7 @@ public class RecargaResponseDTO extends RepresentationModel<RecargaResponseDTO> 
 	   
 		private double importe;
 		
-		private	LocalDateTime fecha;
+		private	LocalDate fecha;
 
 		public RecargaResponseDTO(Recarga pojo) {
 			super();
@@ -81,11 +82,11 @@ public class RecargaResponseDTO extends RepresentationModel<RecargaResponseDTO> 
 			this.importe = importe;
 		}
 
-		public LocalDateTime getFecha() {
+		public LocalDate getFecha() {
 			return fecha;
 		}
 
-		public void setFecha(LocalDateTime fecha) {
+		public void setFecha(LocalDate fecha) {
 			this.fecha = fecha;
 		}
 
