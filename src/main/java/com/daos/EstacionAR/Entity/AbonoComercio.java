@@ -21,16 +21,16 @@ public class AbonoComercio {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate fechaHasta;
 
-    private Float importe;
+    private Float importeAbonado;
 
     public AbonoComercio() {
     }
 
-    public AbonoComercio(Long nroComercio, LocalDate fechaDesde, LocalDate fechaHasta, Float importe) {
+    public AbonoComercio(Long nroComercio, LocalDate fechaDesde, LocalDate fechaHasta, Float importeAbonado) {
         this.nroComercio = nroComercio;
         this.fechaDesde = fechaDesde;
         this.fechaHasta = fechaHasta;
-        this.importe = importe;
+        this.importeAbonado = importeAbonado;
     }
 
     // Getters y setters
@@ -66,22 +66,23 @@ public class AbonoComercio {
         this.fechaHasta = fechaHasta;
     }
 
-    public Float getImporte() {
-        return importe;
-    }
 
-    public void setImporte(Float importe) {
-        this.importe = importe;
-    }
+	public Float getImporteAbonado() {
+		return importeAbonado;
+	}
 
-    @Override
+	public void setImporteAbonado(Float importeAbonado) {
+		this.importeAbonado = importeAbonado;
+	}
+
+	@Override
     public String toString() {
         return "AbonoComercio{" +
                 "id=" + id +
                 ", nroComercio=" + nroComercio +
                 ", fechaDesde=" + fechaDesde +
                 ", fechaHasta=" + fechaHasta +
-                ", importe=" + importe +
+                ", importeAbonado=" + importeAbonado +
                 '}';
     }
 }

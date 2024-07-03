@@ -1,31 +1,88 @@
 package com.daos.EstacionAR.Response;
 
+import java.time.LocalDate;
+
 import org.springframework.hateoas.RepresentationModel;
 
 public class AbonoComercioResponseDTO extends RepresentationModel<AbonoComercioResponseDTO> {
 
-    private Long idComercio;
+	private Long comercioNr;
     private Long cantRecargasPagas;
     private Long cantRecargasImpagas;
-    private Double saldoImpagas;
+    private Float saldoImpagas;
+    private Float saldoPagas;
+    private Float importeAbonar;
+    private Float importeAbonado;
+    private LocalDate fechaDesde;
+    private LocalDate fechaHasta;
 
-    public AbonoComercioResponseDTO(Long idComercio, Long cantRecargasPagas, Long cantRecargasImpagas, Double saldoImpagas) {
-        this.idComercio = idComercio;
+    public AbonoComercioResponseDTO(Long comercioNr, LocalDate fechaDesde, LocalDate fechaHasta, Long cantRecargasPagas, Long cantRecargasImpagas, Float saldoImpagas, Float saldoPagas) {
+        this.comercioNr = comercioNr;
+        this.fechaDesde = fechaDesde;
+        this.fechaHasta = fechaHasta;
         this.cantRecargasPagas = cantRecargasPagas;
         this.cantRecargasImpagas = cantRecargasImpagas;
         this.saldoImpagas = saldoImpagas;
+        this.saldoPagas = saldoPagas;
+        this.importeAbonar = calcularImporte(saldoImpagas);
+        this.importeAbonado = calcularImporte(saldoPagas);
     }
+    
+    public Float getSaldoPagas() {
+		return saldoPagas;
+	}
 
-    // Getters y setters
-    public Long getIdComercio() {
-        return idComercio;
-    }
+	public void setSaldoPagas(Float saldoPagas) {
+		this.saldoPagas = saldoPagas;
+	}
 
-    public void setIdComercio(Long idComercio) {
-        this.idComercio = idComercio;
-    }
+	 public AbonoComercioResponseDTO(Long comercioNr, LocalDate fechaDesde, LocalDate fechaHasta, Long cantRecargasPagas, Float saldoPagas) {
+	        this.comercioNr = comercioNr;
+	        this.fechaDesde = fechaDesde;
+	        this.fechaHasta = fechaHasta;
+	        this.cantRecargasPagas = cantRecargasPagas;
+	        this.cantRecargasImpagas = 0l;
+	        this.saldoImpagas = 0f;
+	        this.saldoPagas = saldoPagas;
+	        this.importeAbonar = 0f;
+	        this.importeAbonado = calcularImporte(saldoPagas);
+	    }
 
-    public Long getCantRecargasPagas() {
+	public Float getImporteAbonado() {
+		return importeAbonado;
+	}
+
+	public void setImporteAbonado(Float importeAbonado) {
+		this.importeAbonado = importeAbonado;
+	}
+
+	public LocalDate getFechaDesde() {
+		return fechaDesde;
+	}
+
+	public void setFechaDesde(LocalDate fechaDesde) {
+		this.fechaDesde = fechaDesde;
+	}
+
+	public LocalDate getFechaHasta() {
+		return fechaHasta;
+	}
+
+	public void setFechaHasta(LocalDate fechaHasta) {
+		this.fechaHasta = fechaHasta;
+	}
+
+	
+
+    public Long getComercioNr() {
+		return comercioNr;
+	}
+
+	public void setComercioNr(Long comercioNr) {
+		this.comercioNr = comercioNr;
+	}
+
+	public Long getCantRecargasPagas() {
         return cantRecargasPagas;
     }
 
@@ -41,21 +98,38 @@ public class AbonoComercioResponseDTO extends RepresentationModel<AbonoComercioR
         this.cantRecargasImpagas = cantRecargasImpagas;
     }
 
-    public Double getSaldoImpagas() {
+    public Float getSaldoImpagas() {
         return saldoImpagas;
     }
 
-    public void setSaldoImpagas(Double saldoImpagas) {
+    public void setSaldoImpagas(Float saldoImpagas) {
         this.saldoImpagas = saldoImpagas;
     }
 
     @Override
     public String toString() {
-        return "AbonoComercioResponseDTO{" +
-                "idComercio=" + idComercio +
+        return "{AbonoComercioResponseDTO{" +
+                "comercioNr=" + comercioNr +
                 ", cantRecargasPagas=" + cantRecargasPagas +
                 ", cantRecargasImpagas=" + cantRecargasImpagas +
                 ", saldoImpagas=" + saldoImpagas +
                 '}';
     }
+
+	public Float getImporteAbonar() {
+		return importeAbonar;
+	}
+
+	public void setImporteAbonar(Float importeAbonar) {
+		this.importeAbonar = importeAbonar;
+	}
+
+	private float calcularImporte(Float importe) {
+	        try {
+	            return Math.round((importe * 0.95f) * 100.00f) / 100.00f;
+	        } catch (Exception e) {
+	            return 0.0f;
+	        }
+	    }
+	
 }
