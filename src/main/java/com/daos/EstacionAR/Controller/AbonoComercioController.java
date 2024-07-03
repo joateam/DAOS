@@ -56,7 +56,9 @@ public class AbonoComercioController {
         									saldoPagas);
         
         respuesta.add(linkTo(methodOn(AbonoComercioController.class).show(comercioNro, fechaDesde, fechaHasta)).withSelfRel());
+        respuesta.add(linkTo(methodOn(ComercioController.class).getById(comercioNro)).withRel("Detalle comercio"));
 
+        
         return ResponseEntity.ok(respuesta);
     }
 
@@ -77,7 +79,7 @@ public class AbonoComercioController {
             Float saldoImpagas = Optional.ofNullable(abonoComercioService.obtenerSaldoRecargasImpagas(comercioNro, fechaDesdeL, fechaHastaL)).orElse((float) 0);
             Float saldoPagas = Optional.ofNullable(abonoComercioService.obtenerSaldoRecargasPagas(comercioNro, fechaDesdeL, fechaHastaL)).orElse((float) 0);
 
-            AbonoComercioResponseDTO responseDTO = new AbonoComercioResponseDTO(
+            AbonoComercioResponseDTO respuesta = new AbonoComercioResponseDTO(
             		comercioNro,
 					fechaDesdeL,
 					fechaHastaL,
@@ -86,8 +88,9 @@ public class AbonoComercioController {
 					saldoImpagas,
 					saldoPagas);
             
-            responseDTO.add(linkTo(methodOn(AbonoComercioController.class).show(comercioNro, fechaDesde, fechaHasta)).withSelfRel());
-            responseList.add(responseDTO);
+            respuesta.add(linkTo(methodOn(AbonoComercioController.class).show(comercioNro, fechaDesde, fechaHasta)).withSelfRel());
+            respuesta.add(linkTo(methodOn(ComercioController.class).getById(comercioNro)).withRel("Detalle comercio"));
+            responseList.add(respuesta);
         }
 
         return ResponseEntity.ok(responseList);
