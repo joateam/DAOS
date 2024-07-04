@@ -1,23 +1,29 @@
 package com.daos.EstacionAR.Controller;
 
-
+import com.daos.EstacionAR.Entity.AbonoComercio;
+import com.daos.EstacionAR.Exceptions.ExceptionAr;
 import com.daos.EstacionAR.Response.AbonoComercioResponseDTO;
 import com.daos.EstacionAR.Service.AbonoComercioServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Optional;
 @RestController
 @RequestMapping("/abonocomercios")
 @Validated
@@ -26,41 +32,117 @@ public class AbonoComercioController {
     @Autowired
     private AbonoComercioServiceImpl abonoComercioService;
 
-    @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+    @GetMapping(value = "/{comercioNro}", produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<AbonoComercioResponseDTO> show(
-            @PathVariable Long id,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) {
+            @PathVariable Long comercioNro,
+            @RequestParam @NotNull String fechaDesde,
+            @RequestParam @NotNull String fechaHasta) throws ExceptionAr {
+    	
+    	LocalDate fechaDesdeL = parseAndValidateDate(fechaDesde, "fechaDesde");
+    	LocalDate fechaHastaL = parseAndValidateDate(fechaHasta, "fechaHasta");
+    	
+        Long recargasPagas = Optional.ofNullable(abonoComercioService.obtenerCantidadRecargasPagas(comercioNro, fechaDesdeL, fechaHastaL)).orElse((long) 0);
+        Long recargasImpagas = Optional.ofNullable(abonoComercioService.obtenerCantidadRecargasImpagas(comercioNro, fechaDesdeL, fechaHastaL)).orElse((long) 0);
+        Float saldoImpagas = Optional.ofNullable(abonoComercioService.obtenerSaldoRecargasImpagas(comercioNro, fechaDesdeL, fechaHastaL)).orElse((float) 0);
+        Float saldoPagas = Optional.ofNullable(abonoComercioService.obtenerSaldoRecargasPagas(comercioNro, fechaDesdeL, fechaHastaL)).orElse((float) 0);
 
-        Long recargasPagas = abonoComercioService.obtenerCantidadRecargasPagas(id, fechaDesde, fechaHasta);
-        Long recargasImpagas = abonoComercioService.obtenerCantidadRecargasImpagas(id, fechaDesde, fechaHasta);
-        Double saldoImpagas = abonoComercioService.obtenerSaldoRecargasImpagas(id, fechaDesde, fechaHasta);
+        AbonoComercioResponseDTO respuesta = new AbonoComercioResponseDTO(
+        									comercioNro,
+        									fechaDesdeL,
+        									fechaHastaL,
+        									recargasPagas,
+        									recargasImpagas,
+        									saldoImpagas,
+        									saldoPagas);
         
+        respuesta.add(linkTo(methodOn(AbonoComercioController.class).show(comercioNro, fechaDesde, fechaHasta)).withSelfRel());
+        respuesta.add(linkTo(methodOn(ComercioController.class).getById(comercioNro)).withRel("Detalle comercio"));
 
-        AbonoComercioResponseDTO respuesta = new AbonoComercioResponseDTO(id, recargasPagas, recargasImpagas, saldoImpagas);
-        respuesta.add(linkTo(methodOn(AbonoComercioController.class).show(id, fechaDesde, fechaHasta)).withSelfRel());
-
+        
         return ResponseEntity.ok(respuesta);
-        
     }
-    
+
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<List<AbonoComercioResponseDTO>> index(
-    		@RequestParam @NotNull(message = "La fecha de inicio no puede ser nula") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
-            @RequestParam @NotNull(message = "La fecha de fin no puede ser nula") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta)  throws Exception  {
+            @RequestParam @NotNull String fechaDesde,
+            @RequestParam @NotNull String fechaHasta) throws ExceptionAr {
 
-        List<Long> comercioIds = abonoComercioService.obtenerTodosLosIdsDeComercio();
-        List<AbonoComercioResponseDTO> responseList = new ArrayList();
+    	LocalDate fechaDesdeL = parseAndValidateDate(fechaDesde, "fechaDesde");
+    	LocalDate fechaHastaL = parseAndValidateDate(fechaHasta, "fechaHasta");
+    	
+        List<Long> comercioNrs = abonoComercioService.obtenerTodosLosNrsDeComercio();
+        List<AbonoComercioResponseDTO> responseList = new ArrayList<>();
 
-        for (Long comercioId : comercioIds) {
-        	Long recargasPagas = abonoComercioService.obtenerCantidadRecargasPagas(comercioId, fechaDesde, fechaHasta);
-            Long recargasImpagas = abonoComercioService.obtenerCantidadRecargasImpagas(comercioId, fechaDesde, fechaHasta);
-            Double saldoImpagas = abonoComercioService.obtenerSaldoRecargasImpagas(comercioId, fechaDesde, fechaHasta);
+        for (Long comercioNro : comercioNrs) {
+        	Long recargasPagas = Optional.ofNullable(abonoComercioService.obtenerCantidadRecargasPagas(comercioNro, fechaDesdeL, fechaHastaL)).orElse((long) 0);
+            Long recargasImpagas = Optional.ofNullable(abonoComercioService.obtenerCantidadRecargasImpagas(comercioNro, fechaDesdeL, fechaHastaL)).orElse((long) 0);
+            Float saldoImpagas = Optional.ofNullable(abonoComercioService.obtenerSaldoRecargasImpagas(comercioNro, fechaDesdeL, fechaHastaL)).orElse((float) 0);
+            Float saldoPagas = Optional.ofNullable(abonoComercioService.obtenerSaldoRecargasPagas(comercioNro, fechaDesdeL, fechaHastaL)).orElse((float) 0);
 
-            AbonoComercioResponseDTO responseDTO = new AbonoComercioResponseDTO(comercioId, recargasPagas, recargasImpagas, saldoImpagas);
-            responseList.add(responseDTO);
+            AbonoComercioResponseDTO respuesta = new AbonoComercioResponseDTO(
+            		comercioNro,
+					fechaDesdeL,
+					fechaHastaL,
+					recargasPagas,
+					recargasImpagas,
+					saldoImpagas,
+					saldoPagas);
+            
+            respuesta.add(linkTo(methodOn(AbonoComercioController.class).show(comercioNro, fechaDesde, fechaHasta)).withSelfRel());
+            respuesta.add(linkTo(methodOn(ComercioController.class).getById(comercioNro)).withRel("Detalle comercio"));
+            responseList.add(respuesta);
         }
 
         return ResponseEntity.ok(responseList);
+    }
+    
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    
+    private LocalDate parseAndValidateDate(String dateStr, String nombreVar) throws ExceptionAr {
+        try {
+            return LocalDate.parse(dateStr, dateFormatter);
+        } catch (DateTimeParseException e) {
+            throw new ExceptionAr("Formato de " + nombreVar + " inválido, se espera el formato 'yyyy-MM-dd'", 400);
+        }
+    }
+    
+
+    
+    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<Object> create(@Valid @RequestBody AbonoComercioForm abonoComercioForm) throws JsonProcessingException, ExceptionAr {
+    	
+    		Long comercioNr = abonoComercioForm.getNroComercio();
+    		//Falta si comercioNr no existe
+    		Float importeAbonar  = abonoComercioForm.getImporteAbonar();
+    		LocalDate fechaDesde = abonoComercioForm.getFechaDesde();
+    		LocalDate fechaHasta = abonoComercioForm.getFechaHasta();
+    		Float saldoImpagas = abonoComercioService.obtenerSaldoRecargasImpagas(comercioNr, fechaDesde, fechaHasta);
+    		if(saldoImpagas == null || saldoImpagas == 0) {
+    			throw new ExceptionAr("El comercio Nº "+comercioNr + " no tiene saldos a abonar en el período seleccionado", 200);
+    		}
+    		
+    		Float importeAbonarCorrespondiente = Math.round((saldoImpagas * 0.95f) * 100.00f) / 100.00f;
+    		if(!importeAbonar.equals(importeAbonarCorrespondiente)) {
+    			throw new ExceptionAr("No se pudo realizar el pago. El importeAbonar para el comercio Nº "+comercioNr+" en el período seleccionado es "+importeAbonarCorrespondiente, 400);
+    		}
+    	
+            AbonoComercio abonoComercio = abonoComercioForm.toPojo();
+        
+            abonoComercioService.actualizarRecargasAAbonado(comercioNr, fechaDesde, fechaHasta);
+           
+            abonoComercioService.guardarAbonoComercio(abonoComercio);
+            
+            Long recargasPagas = Optional.ofNullable(abonoComercioService.obtenerCantidadRecargasPagas(comercioNr, fechaDesde, fechaHasta)).orElse((long) 0);
+            Float saldoPagas = Optional.ofNullable(abonoComercioService.obtenerSaldoRecargasPagas(comercioNr, fechaDesde, fechaHasta)).orElse((float) 0);
+            
+        AbonoComercioResponseDTO responseDTO = new AbonoComercioResponseDTO(
+                comercioNr,
+                fechaDesde,
+                fechaHasta,
+                recargasPagas,
+                saldoPagas
+        );
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 }

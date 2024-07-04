@@ -1,6 +1,7 @@
 package com.daos.EstacionAR.Controller;
 
 import com.daos.EstacionAR.Entity.AbonoComercio;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -15,14 +16,16 @@ public class AbonoComercioForm {
     private Long nroComercio;
 
     @NotNull(message = "La fecha de inicio no puede ser nula")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate fechaDesde;
 
     @NotNull(message = "La fecha de fin no puede ser nula")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate fechaHasta;
 
-    @NotNull(message = "El importe no puede ser nulo")
-    @Positive(message = "El importe debe ser un número positivo")
-    private Float importe;
+    @NotNull(message = "El importe a abonar no puede ser nulo")
+    @Positive(message = "El importe a abonar debe ser un número positivo")
+    private Float importeAbonar;
 
     // Getters y setters
     public Long getNroComercio() {
@@ -49,20 +52,20 @@ public class AbonoComercioForm {
         this.fechaHasta = fechaHasta;
     }
 
-    public Float getImporte() {
-        return importe;
-    }
+    public Float getImporteAbonar() {
+		return importeAbonar;
+	}
 
-    public void setImporte(Float importe) {
-        this.importe = importe;
-    }
+	public void setImporteAbonar(Float importeAbonar) {
+		this.importeAbonar = importeAbonar;
+	}
 
-    public AbonoComercio toPojo() {
+	public AbonoComercio toPojo() {
         AbonoComercio abonoComercio = new AbonoComercio();
         abonoComercio.setNroComercio(this.getNroComercio());
         abonoComercio.setFechaDesde(this.getFechaDesde());
         abonoComercio.setFechaHasta(this.getFechaHasta());
-        abonoComercio.setImporte(this.getImporte());
+        abonoComercio.setImporteAbonado(this.getImporteAbonar());
         return abonoComercio;
     }
 }

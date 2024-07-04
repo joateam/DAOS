@@ -1,6 +1,6 @@
 package com.daos.EstacionAR.Exceptions;
 
-public class ExcepcionAr extends Exception{
+public class ExceptionAr extends Exception{
 
 	private static final long serialVersionUID = 3941221036411842318L;
 
@@ -8,11 +8,11 @@ public class ExcepcionAr extends Exception{
 	
 	private int statusCode;
 
-	public ExcepcionAr() {
+	public ExceptionAr() {
 		super();
 	}
 
-	public ExcepcionAr(String mensaje,int statusCode) {
+	public ExceptionAr(String mensaje,int statusCode) {
 		super();
 		this.mensaje = mensaje;
 		this.statusCode = statusCode;

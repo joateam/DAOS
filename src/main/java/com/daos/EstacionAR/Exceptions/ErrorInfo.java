@@ -12,7 +12,7 @@ public class ErrorInfo {
    @JsonProperty("uri")
    private String uriRequested;
 
-   public ErrorInfo(ExcepcionAr exception, String uriRequested) {
+   public ErrorInfo(ExceptionAr exception, String uriRequested) {
        this.message = exception.getMessage();
        this.statusCode = exception.getStatusCode();
        this.uriRequested = uriRequested;
