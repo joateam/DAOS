@@ -38,14 +38,14 @@ public class RecargaController {
 	//@Autowired
 	//private ComercioService comercioService;
 	
-	@GetMapping(value="/todas", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
 	public List<Recarga> obtenerTodas(){
 		List<Recarga> recargas = recargaService.getALL();
 		return recargas;
 	}
 	
 	
-	@GetMapping(value ="/filtrar_recargas",produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value="q",produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<List<RecargaResponseDTO>> filtrarTodo(
 			@RequestParam (required=false) Long dni,
 			@RequestParam (required=false) String patente,
@@ -102,7 +102,7 @@ public class RecargaController {
 	}
 	
 	
-	@PostMapping(value="/cargar-saldo",consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public  void recargar(@RequestBody  Recarga recarga) {
 		recargaService.Recargar(recarga);
 	}
