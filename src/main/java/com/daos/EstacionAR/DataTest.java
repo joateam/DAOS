@@ -25,13 +25,13 @@ public class DataTest implements CommandLineRunner {
     @Autowired
     private IComercioRepository comercioRepository;
 
-    @Override
+    
+	@Override
     public void run(String... args) throws Exception {
         Random random = new Random();
 
-        Comercio comercioE = comercioRepository.getOne(1l);
-        if(comercioE == null) {
-
+        
+        /**
             IntStream.range(1, 11).forEach(i -> {
                 Comercio comercio = new Comercio();
                 comercio.setComercioNr(i);
@@ -42,7 +42,7 @@ public class DataTest implements CommandLineRunner {
                 
                 comercioRepository.save(comercio);
             });
-        }
+        	*/
 
         IntStream.range(0, 10).forEach(i -> {
             Recarga recarga = new Recarga();
