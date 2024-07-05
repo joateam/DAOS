@@ -21,9 +21,15 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void saveUser(User usuario) {
-        userRepo.save(usuario);
-
+    public User saveUser(User usuario) {
+        if (userRepo.existsById(usuario.getDni())) {
+            throw new RuntimeException("Ya existe un usuario con este DNI");
+        }
+        if (userRepo.existsByVehiculoPatente(usuario.getVehiculo().getPatente())) {
+            throw new RuntimeException("Ya existe un usuario asociado a esta patente");
+        }
+        // Eliminamos la inicialización del saldo aquí
+        return userRepo.save(usuario);
     }
 
     @Override
@@ -32,18 +38,27 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void editUser(Integer dni, User newUserData) {
+    public User  editUser(Integer dni, User newUserData) {
         User usuarioEncontrado = this.findUser(dni);
         if(usuarioEncontrado != null){
+            usuarioEncontrado.setNombre(newUserData.getNombre());
             usuarioEncontrado.setApellido(newUserData.getApellido());
             usuarioEncontrado.setContraseña(newUserData.getContraseña());
             usuarioEncontrado.setCorreo(newUserData.getCorreo());
             usuarioEncontrado.setDomicilio(newUserData.getDomicilio());
-            usuarioEncontrado.setVehiculo(newUserData.getVehiculo());
             usuarioEncontrado.setNacimiento(newUserData.getNacimiento());
-            usuarioEncontrado.setNombre(newUserData.getNombre());
 
-            this.saveUser(usuarioEncontrado);
+            // Verificar si se está cambiando la patente
+            if (!usuarioEncontrado.getVehiculo().getPatente().equals(newUserData.getVehiculo().getPatente())) {
+                if (userRepo.existsByVehiculoPatente(newUserData.getVehiculo().getPatente())) {
+                    throw new RuntimeException("Ya existe un usuario asociado a esta patente");
+                }
+                usuarioEncontrado.getVehiculo().setPatente(newUserData.getVehiculo().getPatente());
+            }
+
+            return userRepo.save(usuarioEncontrado);
+        } else {
+            throw new RuntimeException("Usuario no encontrado");
         }
     }
 
