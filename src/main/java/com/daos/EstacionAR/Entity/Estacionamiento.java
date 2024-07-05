@@ -27,7 +27,7 @@ public class Estacionamiento {
     private LocalDateTime horaFin;
 
     // USER
-    private Long userId;
+    private Integer dniUser;
 
 //-------------------------------------------------------------------------
 
@@ -80,12 +80,12 @@ public class Estacionamiento {
         this.horaFin = horaFin;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Integer getDniUser() {
+        return dniUser;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setDniUser(Integer dniUser) {
+        this.dniUser = dniUser;
     }
 
 
