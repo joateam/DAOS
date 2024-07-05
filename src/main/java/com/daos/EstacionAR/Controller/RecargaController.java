@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.daos.EstacionAR.Entity.Comercio;
 import com.daos.EstacionAR.Entity.Recarga;
+import com.daos.EstacionAR.Entity.User;
+import com.daos.EstacionAR.Exceptions.ExceptionAr;
 import com.daos.EstacionAR.Response.RecargaResponseDTO;
 import com.daos.EstacionAR.Service.ComercioServiceImpl;
 import com.daos.EstacionAR.Service.RecargaService;
@@ -33,9 +35,7 @@ public class RecargaController {
 	
 	@Autowired
 	private RecargaService recargaService;
-	
-	@Autowired
-	private UserService userService;
+		
 	
 	@Autowired
 	private ComercioServiceImpl comercioService;
@@ -47,9 +47,9 @@ public class RecargaController {
 	}
 	
 	
-	@GetMapping(value="q",produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value="/q",produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<List<RecargaResponseDTO>> filtrarTodo(
-			@RequestParam (required=false) Long dni,
+			@RequestParam (required=false) Integer dni,
 			@RequestParam (required=false) String patente,
 			@RequestParam (required=false) Long nroComercio){
 		
@@ -105,13 +105,20 @@ public class RecargaController {
 	
 	
 	@PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-	public  void recargar(@RequestBody  Recarga recarga) {
+	public  ResponseEntity<Void> recargar(@RequestBody  Recarga recarga) throws ExceptionAr {
 		
 		Comercio comercio = comercioService.findByNro(recarga.getNroComercio());
+		
+		
+		
 		if (comercio.getEstado().equals("autorizado")) {
-			//User usuario = usuarioService
-			recargaService.Recargar(recarga);
+				recargaService.Recargar(recarga);
+				return ResponseEntity.ok().build();
+		}else{
+			throw new ExceptionAr("El comercio" +  comercio.getComercioNr() +   "no esta autorizado para realizar la reacarga", 403);
+			//return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
+		
 		
 	}
 	
@@ -132,18 +139,18 @@ public class RecargaController {
 										.withSelfRel();
 			
 			
-//			Method link: Link al servicio que permitirá navegar hacia el usuario relacionado a la recarga
-//			Link userLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class)
-//			       													.getByDni(pojo.getDni()))
-//			       													.withRel("usuario");
-//			Method link: Link al servicio que permitirá navegar hacia el comercio relacionado a la recarga
-//			Link comercioLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ComercioController.class)
-//			       													.getByNro(pojo.getNroComercio()))
-//			       													.withRel("comercio");
+			//Method link: Link al servicio que permitirá navegar hacia el usuario relacionado a la recarga
+			//Link userLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class)
+			       													//.getByDni(pojo.getDni()))
+			 														//.withRel("usuario");
+			//Method link: Link al servicio que permitirá navegar hacia el comercio relacionado a la recarga
+			Link comercioLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ComercioController.class)
+			       													.getById(pojo.getId()))
+			       													.withRel("comercio");
 		
 			dto.add(selfLink);
 //			dto.add(userLink);
-//			dto.add(comercioLink);
+			dto.add(comercioLink);
 			return dto;
 		
 		} catch (Exception e) {

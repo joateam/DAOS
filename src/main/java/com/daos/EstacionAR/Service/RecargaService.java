@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.daos.EstacionAR.Entity.Recarga;
 import com.daos.EstacionAR.Repository.IRecargaRepository;
+import com.daos.EstacionAR.Repository.IUsuarioParaRecargaRepository;
 
 @Service
 public class RecargaService implements IRecargaService {
@@ -16,9 +17,11 @@ public class RecargaService implements IRecargaService {
 	@Autowired
 	private IRecargaRepository repo;
 	
+	@Autowired
+	private IUsuarioParaRecargaRepository usuRepo;
+	
 	@Override
-	public List<Recarga> getByDni(Long dni) {
-		// TODO Auto-generated method stub
+	public List<Recarga> getByDni(Integer dni) {
 		
 		return repo.findByDni(dni);
 	}
@@ -43,6 +46,7 @@ public class RecargaService implements IRecargaService {
 	@Override
 	public void Recargar(Recarga recarga) {
 		repo.save(recarga);
+		usuRepo.actualizarSaldo(recarga.getDni(), recarga.getImporte());
 		
 	}
 

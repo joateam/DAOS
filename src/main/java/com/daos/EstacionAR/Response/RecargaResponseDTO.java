@@ -18,7 +18,7 @@ public class RecargaResponseDTO extends RepresentationModel<RecargaResponseDTO> 
 
 		private Long nroComercio;
 			
-		private Long dni;
+		private Integer dni;
 		
 		private String patente;
 	   
@@ -58,11 +58,11 @@ public class RecargaResponseDTO extends RepresentationModel<RecargaResponseDTO> 
 			this.nroComercio = nroComercio;
 		}
 
-		public Long getDni() {
+		public Integer getDni() {
 			return dni;
 		}
 
-		public void setDni(Long dni) {
+		public void setDni(Integer dni) {
 			this.dni = dni;
 		}
 

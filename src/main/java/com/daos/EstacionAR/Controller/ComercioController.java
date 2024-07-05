@@ -24,5 +24,7 @@ public class ComercioController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
+    
+    
+    
 }

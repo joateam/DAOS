@@ -10,7 +10,7 @@ import com.daos.EstacionAR.Entity.Recarga;
 
 @Repository
 public interface IRecargaRepository extends JpaRepository<Recarga, Long>{
-	List<Recarga> findByDni(Long dni);
+	List<Recarga> findByDni(Integer dni);
 	List<Recarga> findByPatente(String patente);
 	List<Recarga> findByNroComercio(Long nroComercio);
 	

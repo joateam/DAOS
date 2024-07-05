@@ -23,7 +23,7 @@ public class Recarga {
 
 	private Long nroComercio;
 		
-	private Long dni;
+	private Integer dni;
 	
 	private String patente;
 	
@@ -38,7 +38,7 @@ public class Recarga {
 	
 	public Recarga(){}
 	
-	public Recarga(Long nroComercio, Long dni, String patente, double importe , LocalDate fecha) {
+	public Recarga(Long nroComercio, Integer dni, String patente, double importe , LocalDate fecha) {
 		super();
 		this.nroComercio = nroComercio; 
 		this.dni = dni;
@@ -63,11 +63,11 @@ public class Recarga {
 		this.nroComercio = nroComercio;
 	}
 
-	public Long getDni() {
+	public Integer getDni() {
 		return dni;
 	}
 
-	public void setDni(Long dni) {
+	public void setDni(Integer dni) {
 		this.dni = dni;
 	}
 
