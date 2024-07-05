@@ -4,22 +4,20 @@ import org.springframework.hateoas.RepresentationModel;
 
 import com.daos.EstacionAR.Entity.Estacionamiento;
 
-public class EstacionamientoResponseDTO extends RepresentationModel<EstacionamientoResponseDTO>{
+public class EstacionamientoResponseDTO extends RepresentationModel<EstacionamientoResponseDTO> {
 
     private Long id;
     private String patente;
     private String estado;
-    private String horaInicio;
-    private String horaFin;
+    private Integer dniUser;
 
     public EstacionamientoResponseDTO(Estacionamiento pojo) {
+
         this.id = pojo.getId();
         this.patente = pojo.getPatente();
         this.estado = pojo.getEstado().toString();
-        this.horaInicio = pojo.getHoraInicio() != null ? pojo.getHoraInicio().toString() : null;
-        this.horaFin = pojo.getHoraFin() != null ? pojo.getHoraFin().toString() : null;
+        this.dniUser = pojo.getDniUser();
     }
-
 
     public Long getId() {
         return id;
@@ -45,30 +43,20 @@ public class EstacionamientoResponseDTO extends RepresentationModel<Estacionamie
         this.estado = estado;
     }
 
-    public String getHoraInicio() {
-        return horaInicio;
+    public Integer getDniUser() {
+        return dniUser;
     }
 
-    public void setHoraInicio(String horaInicio) {
-        this.horaInicio = horaInicio;
-    }
-
-    public String getHoraFin() {
-        return horaFin;
-    }
-
-    public void setHoraFin(String horaFin) {
-        this.horaFin = horaFin;
+    public void setDniUser(Integer dniUser) {
+        this.dniUser = dniUser;
     }
 
     @Override
     public String toString() {
-        return "EstacionamientoDTO{" +
-                "id=" + id +
+        return "EstacionamientoResponseDTO{" +
                 ", patente='" + patente + '\'' +
                 ", estado='" + estado + '\'' +
-                ", horaInicio='" + horaInicio + '\'' +
-                ", horaFin='" + horaFin + '\'' +
+                ", dniUser='" + dniUser + '\'' +
                 '}';
     }
 }
