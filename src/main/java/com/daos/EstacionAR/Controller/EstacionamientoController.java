@@ -1,63 +1,66 @@
 package com.daos.EstacionAR.Controller;
 
 import com.daos.EstacionAR.Entity.Estacionamiento;
-import com.daos.EstacionAR.Service.EstacionamientoService;
+import com.daos.EstacionAR.Response.EstacionamientoResponseDTO;
+import com.daos.EstacionAR.Service.IEstacionamientoService;
+
+import jakarta.validation.Valid;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
-@RequestMapping(value = "/estacionamientos") // URL base
+@RequestMapping("/estacionamientos") // URL base
 public class EstacionamientoController {
 
     @Autowired
-    private EstacionamientoService estacionamientoService;
+    private IEstacionamientoService estacionamientoService;
 
-    // CREAR ESTACIONAMIENTO, nuevo registro utilizando el form
+    @PostMapping("/insertar")
+    public ResponseEntity<EstacionamientoResponseDTO> insertarEstacionamiento(
+            @Valid @RequestBody EstacionamientoForm form) {
+        Estacionamiento estacionamiento = new Estacionamiento();
+        estacionamiento.setPatente(form.getPatente());
+        estacionamiento.setEstado(Estacionamiento.Estado.valueOf(form.getEstado().name()));
 
-    @PostMapping
-    @ResponseBody
-    public ResponseEntity<?> crearEstacionamiento(@Validated @RequestBody EstacionamientoForm estacionamientoForm) {
-        try {
-            Estacionamiento nuevoEstacionamiento = estacionamientoService.validarYCrearEstacionamiento(estacionamientoForm);
-            return ResponseEntity.ok(nuevoEstacionamiento); // exitoso
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage()); // msj de error
-        }
+        Estacionamiento nuevoEstacionamiento = estacionamientoService.insertarEstacionamiento(estacionamiento);
+        EstacionamientoResponseDTO responseDTO = new EstacionamientoResponseDTO(nuevoEstacionamiento);
+        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 
-    // ACTUALIZAR ESTACIONAMIENTO
+    /**
+     * @PostMapping("/insertar")
+     * public void crearEstacionamiento(@RequestBody Estacionamiento
+     * estacionamiento){
+     * estacionamientoService.insertarEstacionamiento(estacionamiento);
+     * } NO DEVUELVE RESPUESTA
+     **/
 
-    @PutMapping(value = "/{patente}") // es lo mismo q hacer esto...
-    // @RequestMapping (value = "/{patente}"), method = RequestMethod.PutMapping)
+     @GetMapping("/consultar/{patente}")
+    public ResponseEntity<EntityModel<EstacionamientoResponseDTO>> consultarEstado(@PathVariable String patente) {
+        Estacionamiento estacionamiento = estacionamientoService.consultarEstado(patente);
 
-    public ResponseEntity<?> actualizarEstacionamiento(@PathVariable String patente,
-            @Validated @RequestBody EstacionamientoForm estacionamientoForm) {
-        try {
-            estacionamientoService.validarEstacionamiento(estacionamientoForm);
-            Optional<Estacionamiento> estacionamientoActual = estacionamientoService.actualizarEstacionamiento(patente,
-                    estacionamientoForm);
-            if (estacionamientoActual.isPresent()) {
-                return ResponseEntity.ok(estacionamientoActual.get());
-            } else {
-                return ResponseEntity.notFound().build(); // no encuentro el estacionamiento
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        EstacionamientoResponseDTO responseDTO = new EstacionamientoResponseDTO(estacionamiento);
+        EntityModel<EstacionamientoResponseDTO> resource = EntityModel.of(responseDTO);
+        resource.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EstacionamientoController.class)
+                .consultarEstado(patente)).withSelfRel());
+        resource.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class)
+                .getUserData(estacionamiento.getDniUser())).withRel("user-data"));
+        return new ResponseEntity<>(resource, HttpStatus.OK);
+    } 
+
+    @PutMapping("/finalizar")
+    public ResponseEntity<EstacionamientoResponseDTO> finalizarEstacionamiento(
+            @Valid @RequestBody EstacionamientoForm form) {
+        Estacionamiento estacionamiento = estacionamientoService.finalizarEstacionamiento(form.getPatente(),
+                form.getPasswordUser());
+        EstacionamientoResponseDTO responseDTO = new EstacionamientoResponseDTO(estacionamiento);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
-    // CONSULTAR ESTADO DEL ESTACIONAMIENTO, por patente
-    @GetMapping(value = "/{patente}")
-    public ResponseEntity<?> consultarEstacionamiento(@PathVariable String patente) {
-        Optional<Estacionamiento> estacionamiento = estacionamientoService.consultarEstacionamiento(patente);
-        if (estacionamiento.isPresent()) {
-            return ResponseEntity.ok(estacionamiento.get()); // devuelvo detalles
-        } else {
-            return ResponseEntity.notFound().build(); // no ahy estacionamiento
-        }
-    }
 }
