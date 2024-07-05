@@ -1,8 +1,10 @@
 package com.daos.EstacionAR.Response;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import com.daos.EstacionAR.Entity.Estacionamiento;
 
-public class EstacionamientoResponseDTO {
+public class EstacionamientoResponseDTO extends RepresentationModel<EstacionamientoResponseDTO>{
 
     private Long id;
     private String patente;
@@ -10,12 +12,12 @@ public class EstacionamientoResponseDTO {
     private String horaInicio;
     private String horaFin;
 
-    public EstacionamientoResponseDTO(Estacionamiento estacionamiento) {
-        this.id = estacionamiento.getId();
-        this.patente = estacionamiento.getPatente();
-        this.estado = estacionamiento.getEstado().toString();
-        this.horaInicio = estacionamiento.getHoraInicio() != null ? estacionamiento.getHoraInicio().toString() : null;
-        this.horaFin = estacionamiento.getHoraFin() != null ? estacionamiento.getHoraFin().toString() : null;
+    public EstacionamientoResponseDTO(Estacionamiento pojo) {
+        this.id = pojo.getId();
+        this.patente = pojo.getPatente();
+        this.estado = pojo.getEstado().toString();
+        this.horaInicio = pojo.getHoraInicio() != null ? pojo.getHoraInicio().toString() : null;
+        this.horaFin = pojo.getHoraFin() != null ? pojo.getHoraFin().toString() : null;
     }
 
 
