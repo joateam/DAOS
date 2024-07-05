@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface IEstacionamientoRepository extends JpaRepository<Estacionamiento, Long> {
     
-    @Query("SELECT e FROM Estacionamiento e WHERE e.vehiculo.patente = ?1 AND e.estado = 'ESTACIONADO'")
+    @Query("SELECT e FROM Estacionamiento e WHERE e.patente = ?1 AND e.estado = 'ESTACIONADO'")
     Optional<Estacionamiento> findEstacionadoByPatente(String patente);
 
     Optional<Estacionamiento> findByVehiculoPatenteAndEstado(String patente, String estado);
