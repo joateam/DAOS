@@ -47,9 +47,9 @@ public class DataTest implements CommandLineRunner {
         IntStream.range(0, 10).forEach(i -> {
             Recarga recarga = new Recarga();
             recarga.setNroComercio((long) (random.nextInt(10) + 1));
-            recarga.setDni(10000000L + random.nextInt(90000000));
+            recarga.setDni(10000000 + random.nextInt(90000000));
             recarga.setPatente(generateRandomPatente(random));
-            recarga.setImporte(random.nextInt(901) + 100);
+            recarga.setImporte(random.nextDouble(901) + 100);
             recarga.setFecha(generateRandomDate(random));
             recarga.setAbonado(random.nextInt(2));
 
