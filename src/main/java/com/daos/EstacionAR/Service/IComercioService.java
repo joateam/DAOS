@@ -9,4 +9,5 @@ public interface IComercioService {
     List<Comercio> findAll();
     Comercio update(Long id, Comercio comercio);
     void delete(Long id);
+    Comercio findByNro(Long nroComercio);
 }

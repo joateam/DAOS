@@ -29,6 +29,8 @@ public class ComercioServiceImpl implements IComercioService {
     public List<Comercio> findAll() {
         return comercioRepository.findAll();
     }
+    
+    
 
     @Override
     public Comercio update(Long id, Comercio comercio) {
@@ -49,4 +51,10 @@ public class ComercioServiceImpl implements IComercioService {
     public void delete(Long id) {
         comercioRepository.deleteById(id);
     }
+
+	@Override
+	public Comercio findByNro(Long nroComercio) {
+		Optional<Comercio> comercio = comercioRepository.findByComercioNr(nroComercio);
+		return comercio.orElse(null);
+	}
 }

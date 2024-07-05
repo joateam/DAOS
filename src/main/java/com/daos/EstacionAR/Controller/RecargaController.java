@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.daos.EstacionAR.Entity.Comercio;
 import com.daos.EstacionAR.Entity.Recarga;
 import com.daos.EstacionAR.Response.RecargaResponseDTO;
+import com.daos.EstacionAR.Service.ComercioServiceImpl;
 import com.daos.EstacionAR.Service.RecargaService;
 import com.daos.EstacionAR.Service.UserService;
 
@@ -35,8 +37,8 @@ public class RecargaController {
 	@Autowired
 	private UserService userService;
 	
-	//@Autowired
-	//private ComercioService comercioService;
+	@Autowired
+	private ComercioServiceImpl comercioService;
 	
 	@GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
 	public List<Recarga> obtenerTodas(){
@@ -104,7 +106,13 @@ public class RecargaController {
 	
 	@PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public  void recargar(@RequestBody  Recarga recarga) {
-		recargaService.Recargar(recarga);
+		
+		Comercio comercio = comercioService.findByNro(recarga.getNroComercio());
+		if (comercio.getEstado().equals("autorizado")) {
+			//User usuario = usuarioService
+			recargaService.Recargar(recarga);
+		}
+		
 	}
 	
 	
