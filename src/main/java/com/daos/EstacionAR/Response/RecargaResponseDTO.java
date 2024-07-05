@@ -22,7 +22,7 @@ public class RecargaResponseDTO extends RepresentationModel<RecargaResponseDTO> 
 		
 		private String patente;
 	   
-		private double importe;
+		private Double importe;
 		
 		private	LocalDate fecha;
 
@@ -74,11 +74,11 @@ public class RecargaResponseDTO extends RepresentationModel<RecargaResponseDTO> 
 			this.patente = patente;
 		}
 
-		public double getImporte() {
+		public Double getImporte() {
 			return importe;
 		}
 
-		public void setImporte(double importe) {
+		public void setImporte(Double importe) {
 			this.importe = importe;
 		}
 

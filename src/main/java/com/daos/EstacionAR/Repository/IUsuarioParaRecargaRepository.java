@@ -14,7 +14,7 @@ public interface IUsuarioParaRecargaRepository extends JpaRepository<User, Integ
 	
 	@Modifying
     @Transactional
-    @Query("UPDATE Usuario u SET u.saldo = u.saldo + :monto WHERE u.id = :usuarioId")
+    @Query("UPDATE User u SET u.saldo = u.saldo + :monto WHERE u.id = :usuarioId")
     void actualizarSaldo(Integer usuarioId, Double monto);
 
 }

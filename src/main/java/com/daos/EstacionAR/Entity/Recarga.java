@@ -31,14 +31,14 @@ public class Recarga {
    
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "#.00")
 	@Column(nullable=false,scale=2)
-	private double importe;
+	private Double importe;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	public LocalDate fecha = LocalDate.now();
 	
 	public Recarga(){}
 	
-	public Recarga(Long nroComercio, Integer dni, String patente, double importe , LocalDate fecha) {
+	public Recarga(Long nroComercio, Integer dni, String patente, Double importe , LocalDate fecha) {
 		super();
 		this.nroComercio = nroComercio; 
 		this.dni = dni;
@@ -79,11 +79,11 @@ public class Recarga {
 		this.patente = patente;
 	}
 
-	public double getImporte() {
+	public Double getImporte() {
 		return importe;
 	}
 
-	public void setImporte(double importe) {
+	public void setImporte(Double importe) {
 		this.importe = importe;
 	}
 

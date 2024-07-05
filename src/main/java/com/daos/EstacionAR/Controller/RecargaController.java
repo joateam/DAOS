@@ -113,6 +113,7 @@ public class RecargaController {
 		
 		if (comercio.getEstado().equals("autorizado")) {
 				recargaService.Recargar(recarga);
+				recargaService.actualizarSaldo(recarga);
 				return ResponseEntity.ok().build();
 		}else{
 			throw new ExceptionAr("El comercio" +  comercio.getComercioNr() +   "no esta autorizado para realizar la reacarga", 403);

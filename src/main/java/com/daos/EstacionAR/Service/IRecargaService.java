@@ -11,4 +11,5 @@ public interface IRecargaService {
 	public List<Recarga> getByPatente(String patente);
 	public List<Recarga> getByNroComercio(Long nroComercio);
 	public void Recargar(Recarga recarga);
+	public void actualizarSaldo(Recarga recarga);
 }
