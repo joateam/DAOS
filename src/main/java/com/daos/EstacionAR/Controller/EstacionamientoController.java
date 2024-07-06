@@ -50,7 +50,7 @@ public class EstacionamientoController {
         resource.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EstacionamientoController.class)
                 .consultarEstado(patente)).withSelfRel());
         resource.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class)
-                .getUserData(estacionamiento.getDniUser())).withRel("user-data"));
+                .getUserById(estacionamiento.getDniUser())).withRel("user-data"));
         return new ResponseEntity<>(resource, HttpStatus.OK);
     } 
 

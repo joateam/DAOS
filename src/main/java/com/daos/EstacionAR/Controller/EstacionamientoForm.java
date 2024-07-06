@@ -14,7 +14,6 @@ public class EstacionamientoForm {
     @NotNull(message = "El estado no puede ser nulo")
     private EstadoEstacionamiento estado;
 
-    // Getters y setters
     public String getPatente() {
         return patente;
     }
@@ -39,7 +38,6 @@ public class EstacionamientoForm {
         this.estado = estado;
     }
 
-    // Enum para el estado del estacionamiento (Estacionado / Libre)
     public enum EstadoEstacionamiento {
         ESTACIONADO,
         LIBRE
