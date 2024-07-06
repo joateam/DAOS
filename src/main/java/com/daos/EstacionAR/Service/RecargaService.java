@@ -2,12 +2,13 @@ package com.daos.EstacionAR.Service;
 
 
 import java.util.List;
-
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.daos.EstacionAR.Entity.Recarga;
+import com.daos.EstacionAR.Entity.User;
 import com.daos.EstacionAR.Repository.IRecargaRepository;
 import com.daos.EstacionAR.Repository.IUsuarioParaRecargaRepository;
 
@@ -22,6 +23,8 @@ public class RecargaService implements IRecargaService {
 	
 	@Autowired
 	private IUsuarioParaRecargaRepository usuRepo;
+	
+	
 	
 	@Override
 	public List<Recarga> getByDni(Integer dni) {
@@ -55,8 +58,23 @@ public class RecargaService implements IRecargaService {
 	@Transactional
 	@Override
 	public void actualizarSaldo(Recarga recarga) {
-		usuRepo.actualizarSaldo(recarga.getDni(), recarga.getImporte());
 		
+		User usuario = usuRepo.findByDni(recarga.getDni());
+		if (usuario.getSaldo()==null) {
+			usuRepo.primerActualizarSaldo(recarga.getDni(), recarga.getImporte());
+		}else {
+			usuRepo.actualizarSaldo(recarga.getDni(), recarga.getImporte());
+		}
+		
+		
+	}
+
+	@Override
+	public Recarga getById(Long id) {
+			Optional<Recarga> recarga = repo.findById(id);
+			return recarga.orElse(null);
+		
+	
 	}
 
 	

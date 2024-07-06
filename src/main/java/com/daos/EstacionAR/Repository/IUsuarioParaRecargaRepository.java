@@ -12,9 +12,16 @@ import jakarta.transaction.Transactional;
 @Repository
 public interface IUsuarioParaRecargaRepository extends JpaRepository<User, Integer> {
 	
+	User findByDni(Integer dni);
+	
 	@Modifying
     @Transactional
     @Query("UPDATE User u SET u.saldo = u.saldo + :monto WHERE u.id = :usuarioId")
     void actualizarSaldo(Integer usuarioId, Double monto);
+	
+	@Modifying
+    @Transactional
+    @Query("UPDATE User u SET u.saldo = :monto WHERE u.id = :usuarioId")
+    void primerActualizarSaldo(Integer usuarioId, Double monto);
 
 }

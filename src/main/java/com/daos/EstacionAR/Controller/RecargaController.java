@@ -3,7 +3,7 @@ package com.daos.EstacionAR.Controller;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Optional;
 
 //import org.hibernate.mapping.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,10 +41,28 @@ public class RecargaController {
 	@Autowired
 	private ComercioServiceImpl comercioService;
 	
+	//ESTE METODO TRAE TODAS LAS RECARGAS
 	@GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
-	public List<Recarga> obtenerTodas(){
+	public ResponseEntity<List<RecargaResponseDTO>> obtenerTodas(){
 		List<Recarga> recargas = recargaService.getALL();
-		return recargas;
+		List<RecargaResponseDTO> dtos = new ArrayList<RecargaResponseDTO>();
+		for (Recarga pojo : recargas) {
+			dtos.add(construirRespuesta(pojo));
+		}
+		return ResponseEntity.ok(dtos);
+	}
+	
+	@GetMapping(value="/{id}",produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<RecargaResponseDTO> obtenerRecarga(@PathVariable Long id){
+		 Recarga recarga = recargaService.getById(id);
+		 
+		 
+		 if (recarga != null) {
+			 	RecargaResponseDTO dto = construirRespuesta(recarga);
+	            return new ResponseEntity<>(dto, HttpStatus.OK);
+	        } else {
+	            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	        }
 	}
 	
 	
@@ -105,7 +124,7 @@ public class RecargaController {
 	
 	
 	@PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-	public  ResponseEntity<Void> recargar(@RequestBody  Recarga recarga) throws ExceptionAr {
+	public  ResponseEntity<Recarga> recargar(@RequestBody  Recarga recarga) throws ExceptionAr {
 		
 		Comercio comercio = comercioService.findByNro(recarga.getNroComercio());
 		
@@ -114,7 +133,7 @@ public class RecargaController {
 		if (comercio.getEstado().equals("autorizado")) {
 				recargaService.Recargar(recarga);
 				recargaService.actualizarSaldo(recarga);
-				return ResponseEntity.ok().build();
+				return new ResponseEntity<Recarga>(recarga, HttpStatus.CREATED);
 		}else{
 			throw new ExceptionAr("El comercio" +  comercio.getComercioNr() +   "no esta autorizado para realizar la reacarga", 403);
 			//return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -125,12 +144,7 @@ public class RecargaController {
 	
 	
 	
-	/**
-	 * Métdo auxiliar que toma los datos del pojo y construye el objeto a devolver en la response, con su hipervinculos
-	 * @param pojo
-	 * @return
-	 * @throws Excepcion 
-	 */
+	
 	private RecargaResponseDTO construirRespuesta(Recarga pojo) /**throws ExceptionAr*/ {
 		try {
 			RecargaResponseDTO dto = new RecargaResponseDTO(pojo);
@@ -141,16 +155,16 @@ public class RecargaController {
 			
 			
 			//Method link: Link al servicio que permitirá navegar hacia el usuario relacionado a la recarga
-			//Link userLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class)
-			       													//.getByDni(pojo.getDni()))
-			 														//.withRel("usuario");
+			Link userLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class)
+			       													.getUserById(pojo.getDni()))
+			 														.withRel("usuario");
 			//Method link: Link al servicio que permitirá navegar hacia el comercio relacionado a la recarga
 			Link comercioLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ComercioController.class)
 			       													.getById(pojo.getId()))
 			       													.withRel("comercio");
 		
 			dto.add(selfLink);
-//			dto.add(userLink);
+			dto.add(userLink);
 			dto.add(comercioLink);
 			return dto;
 		
