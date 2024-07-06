@@ -3,7 +3,7 @@ package com.daos.EstacionAR.Controller;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Optional;
 
 //import org.hibernate.mapping.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +14,19 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.daos.EstacionAR.Entity.Comercio;
 import com.daos.EstacionAR.Entity.Recarga;
+import com.daos.EstacionAR.Entity.User;
+import com.daos.EstacionAR.Exceptions.ExceptionAr;
 import com.daos.EstacionAR.Response.RecargaResponseDTO;
+import com.daos.EstacionAR.Service.ComercioServiceImpl;
 import com.daos.EstacionAR.Service.RecargaService;
 import com.daos.EstacionAR.Service.UserService;
 
@@ -31,25 +36,41 @@ public class RecargaController {
 	
 	@Autowired
 	private RecargaService recargaService;
+		
 	
 	@Autowired
-	private UserService userService;
+	private ComercioServiceImpl comercioService;
 	
-	//@Autowired
-	//private ComercioService comercioService;
-	
-	@GetMapping(value="/todas", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public List<Recarga> obtenerTodas(){
+	//ESTE METODO TRAE TODAS LAS RECARGAS
+	@GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<List<RecargaResponseDTO>> obtenerTodas(){
 		List<Recarga> recargas = recargaService.getALL();
-		return recargas;
+		List<RecargaResponseDTO> dtos = new ArrayList<RecargaResponseDTO>();
+		for (Recarga pojo : recargas) {
+			dtos.add(construirRespuesta(pojo));
+		}
+		return ResponseEntity.ok(dtos);
+	}
+	
+	@GetMapping(value="/{id}",produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<RecargaResponseDTO> obtenerRecarga(@PathVariable Long id){
+		 Recarga recarga = recargaService.getById(id);
+		 
+		 
+		 if (recarga != null) {
+			 	RecargaResponseDTO dto = construirRespuesta(recarga);
+	            return new ResponseEntity<>(dto, HttpStatus.OK);
+	        } else {
+	            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	        }
 	}
 	
 	
-	@GetMapping(value ="/filtrar_recargas",produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value="/q",produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<List<RecargaResponseDTO>> filtrarTodo(
-			@RequestParam (required=false) Long dni,
+			@RequestParam (required=false) Integer dni,
 			@RequestParam (required=false) String patente,
-			@RequestParam (required=false) Long nroComercio){
+			@RequestParam (required=false) Long nroComercio) {
 		
 		List<Recarga> recargas = null;
 		
@@ -102,20 +123,29 @@ public class RecargaController {
 	}
 	
 	
-	@PostMapping(value="/cargar-saldo",consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-	public  void recargar(@RequestBody  Recarga recarga) {
-		recargaService.Recargar(recarga);
+	@PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public  ResponseEntity<Recarga> recargar(@RequestBody  Recarga recarga) throws ExceptionAr {
+		
+		Comercio comercio = comercioService.findByNro(recarga.getNroComercio());
+		
+		
+		
+		if (comercio.getEstado().equals("autorizado")) {
+				recargaService.Recargar(recarga);
+				recargaService.actualizarSaldo(recarga);
+				return new ResponseEntity<Recarga>(recarga, HttpStatus.CREATED);
+		}else{
+			throw new ExceptionAr("El comercio" +  comercio.getComercioNr() +   "no esta autorizado para realizar la reacarga", 403);
+			//return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		
+		
 	}
 	
 	
 	
-	/**
-	 * Métdo auxiliar que toma los datos del pojo y construye el objeto a devolver en la response, con su hipervinculos
-	 * @param pojo
-	 * @return
-	 * @throws Excepcion 
-	 */
-	private RecargaResponseDTO construirRespuesta(Recarga pojo) /**throws Excepcion*/ {
+	
+	private RecargaResponseDTO construirRespuesta(Recarga pojo) /**throws ExceptionAr*/ {
 		try {
 			RecargaResponseDTO dto = new RecargaResponseDTO(pojo);
 			 //Self link
@@ -124,22 +154,23 @@ public class RecargaController {
 										.withSelfRel();
 			
 			
-//			Method link: Link al servicio que permitirá navegar hacia el usuario relacionado a la recarga
-//			Link userLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class)
-//			       													.getByDni(pojo.getDni()))
-//			       													.withRel("usuario");
-//			Method link: Link al servicio que permitirá navegar hacia el comercio relacionado a la recarga
-//			Link comercioLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ComercioController.class)
-//			       													.getByNro(pojo.getNroComercio()))
-//			       													.withRel("comercio");
+			//Method link: Link al servicio que permitirá navegar hacia el usuario relacionado a la recarga
+			Link userLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class)
+			       													.getUserById(pojo.getDni()))
+			 														.withRel("usuario");
+			//Method link: Link al servicio que permitirá navegar hacia el comercio relacionado a la recarga
+			Link comercioLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ComercioController.class)
+			       													.getById(pojo.getId()))
+			       													.withRel("comercio");
 		
 			dto.add(selfLink);
-//			dto.add(userLink);
-//			dto.add(comercioLink);
+			dto.add(userLink);
+			dto.add(comercioLink);
 			return dto;
 		
 		} catch (Exception e) {
-			return null;//throw new Excepcion(e.getMessage(), 500);
+			return null;
+			//throw new ExceptionAr("Error", 500);
 		}
 	}
 

@@ -25,6 +25,7 @@ public class DataTest implements CommandLineRunner {
     @Autowired
     private IComercioRepository comercioRepository;
 
+<<<<<<< HEAD
     @Override
     public void run(String... args) throws Exception {
         Random random = new Random();
@@ -32,6 +33,15 @@ public class DataTest implements CommandLineRunner {
         Comercio comercioE = comercioRepository.getOne(1l);
         if(comercioE == null) {
 
+=======
+    
+	@Override
+    public void run(String... args) throws Exception {
+        Random random = new Random();
+
+        
+        /**
+>>>>>>> mat-branch
             IntStream.range(1, 11).forEach(i -> {
                 Comercio comercio = new Comercio();
                 comercio.setComercioNr(i);
@@ -42,14 +52,24 @@ public class DataTest implements CommandLineRunner {
                 
                 comercioRepository.save(comercio);
             });
+<<<<<<< HEAD
         }
+=======
+        	*/
+>>>>>>> mat-branch
 
         IntStream.range(0, 10).forEach(i -> {
             Recarga recarga = new Recarga();
             recarga.setNroComercio((long) (random.nextInt(10) + 1));
+<<<<<<< HEAD
             recarga.setDni(10000000L + random.nextInt(90000000));
             recarga.setPatente(generateRandomPatente(random));
             recarga.setImporte(random.nextInt(901) + 100);
+=======
+            recarga.setDni(10000000 + random.nextInt(90000000));
+            recarga.setPatente(generateRandomPatente(random));
+            recarga.setImporte(random.nextDouble(901) + 100);
+>>>>>>> mat-branch
             recarga.setFecha(generateRandomDate(random));
             recarga.setAbonado(random.nextInt(2));
 

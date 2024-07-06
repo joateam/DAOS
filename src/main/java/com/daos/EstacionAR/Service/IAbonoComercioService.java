@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.daos.EstacionAR.Entity.AbonoComercio;
+import com.daos.EstacionAR.Entity.Comercio;
 
 public interface IAbonoComercioService {
 
@@ -20,4 +21,9 @@ public interface IAbonoComercioService {
 	 void guardarAbonoComercio(AbonoComercio ac);
 	 
 	 void actualizarRecargasAAbonado(Long comercioNro, LocalDate fechaDesde, LocalDate fechaHasta);
+<<<<<<< HEAD
+=======
+	 
+	 
+>>>>>>> mat-branch
 }
