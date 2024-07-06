@@ -3,8 +3,7 @@ package com.daos.EstacionAR.Entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-
-import java.time.LocalDateTime;
+//import java.time.LocalDateTime;
 import jakarta.persistence.Id;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.GeneratedValue;
@@ -22,9 +21,9 @@ public class Estacionamiento {
     @Enumerated(EnumType.STRING)
     private Estado estado; 
 
-    private LocalDateTime horaInicio;
+  /*   private LocalDateTime horaInicio;
 
-    private LocalDateTime horaFin;
+    private LocalDateTime horaFin; */
 
     // USER
     private Integer dniUser;
@@ -64,7 +63,7 @@ public class Estacionamiento {
         this.estado = estado;
     }
 
-    public LocalDateTime getHoraInicio() {
+   /*  public LocalDateTime getHoraInicio() {
         return horaInicio;
     }
 
@@ -78,7 +77,7 @@ public class Estacionamiento {
 
     public void setHoraFin(LocalDateTime horaFin) {
         this.horaFin = horaFin;
-    }
+    } */
 
     public Integer getDniUser() {
         return dniUser;
@@ -95,8 +94,8 @@ public class Estacionamiento {
                 "id=" + id +
                 ", patente='" + patente + '\'' +
                 ", estado='" + estado + '\'' +
-                ", horaInicio=" + horaInicio +
-                ", horaFin=" + horaFin +
+              /*   ", horaInicio=" + horaInicio +
+                ", horaFin=" + horaFin + */
                 '}';
     }
 }

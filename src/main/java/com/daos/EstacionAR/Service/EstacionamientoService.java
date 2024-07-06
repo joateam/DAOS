@@ -3,7 +3,6 @@ package com.daos.EstacionAR.Service;
 import com.daos.EstacionAR.Entity.Estacionamiento;
 import com.daos.EstacionAR.Entity.User;
 import com.daos.EstacionAR.Entity.Estacionamiento.Estado;
-import com.daos.EstacionAR.Controller.EstacionamientoForm;
 import com.daos.EstacionAR.Repository.IEstacionamientoRepository;
 import com.daos.EstacionAR.Repository.IUserRepository;
 
@@ -23,13 +22,12 @@ public class EstacionamientoService implements IEstacionamientoService{
 
     @Override
     public Estacionamiento insertarEstacionamiento(Estacionamiento estacionamiento) {
-        // Validar si el vehículo ya está estacionado
+        
         Optional<Estacionamiento> estacionado = estacionamientoRepository.findEstacionadoByPatente(estacionamiento.getPatente());
         if (estacionado.isPresent()) {
             throw new IllegalStateException("El vehículo ya está estacionado.");
         }
         
-        // Insertar nuevo registro de estacionamiento
         return estacionamientoRepository.save(estacionamiento);
     }
 
@@ -40,8 +38,8 @@ public class EstacionamientoService implements IEstacionamientoService{
         if (optionalEstacionamiento.isPresent()) {
             Estacionamiento estacionamiento = optionalEstacionamiento.get();
             
-             Long userId = estacionamiento.getUserId();
-             Optional<User> userOptional = userRepository.findById(userId);
+             Integer dniUser = estacionamiento.getDniUser();
+             Optional<User> userOptional = userRepository.findById(dniUser);
              if (userOptional.isPresent()) {
                  User user = userOptional.get();
                  if (!user.getContraseña().equals(password)) {
@@ -61,7 +59,7 @@ public class EstacionamientoService implements IEstacionamientoService{
 
     @Override
     public Estacionamiento consultarEstado(String patente) {
-        Optional<Estacionamiento> optionalEstacionamiento = estacionamientoRepository.findByVehiculoPatente(patente);
+        Optional<Estacionamiento> optionalEstacionamiento = estacionamientoRepository.findByPatente(patente);
         if (optionalEstacionamiento.isPresent()) {
             return optionalEstacionamiento.get();
         } else {

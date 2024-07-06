@@ -4,6 +4,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 import com.daos.EstacionAR.Entity.Estacionamiento;
 
+
 public class EstacionamientoResponseDTO extends RepresentationModel<EstacionamientoResponseDTO> {
 
     private Long id;
