@@ -51,7 +51,7 @@ public class RecargaController {
 	public ResponseEntity<List<RecargaResponseDTO>> filtrarTodo(
 			@RequestParam (required=false) Integer dni,
 			@RequestParam (required=false) String patente,
-			@RequestParam (required=false) Long nroComercio){
+			@RequestParam (required=false) Long nroComercio) {
 		
 		List<Recarga> recargas = null;
 		
@@ -131,7 +131,7 @@ public class RecargaController {
 	 * @return
 	 * @throws Excepcion 
 	 */
-	private RecargaResponseDTO construirRespuesta(Recarga pojo) /**throws Excepcion*/ {
+	private RecargaResponseDTO construirRespuesta(Recarga pojo) /**throws ExceptionAr*/ {
 		try {
 			RecargaResponseDTO dto = new RecargaResponseDTO(pojo);
 			 //Self link
@@ -155,7 +155,8 @@ public class RecargaController {
 			return dto;
 		
 		} catch (Exception e) {
-			return null;//throw new Excepcion(e.getMessage(), 500);
+			return null;
+			//throw new ExceptionAr("Error", 500);
 		}
 	}
 
